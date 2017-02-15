@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: lazybone
+  jpa:
+    database: mysql
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.5.5.60:3306/lazybone?characterEncoding=utf8&useSSL=false
+    username: lazybone
+    password: ailab2020
+    type: com.zaxxer.hikari.HikariDataSource
+server:
+  port: 9111
+  context-path: /lazybone
+logging:
+  level: org.hibernate.sql=debug
