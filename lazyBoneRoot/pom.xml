@@ -55,6 +55,8 @@
   </build>
     <modules>
         <module>eureka</module>
+      <module>gateway</module>
+      <module>lazybone</module>
     </modules>
   <repositories>
     <repository>
