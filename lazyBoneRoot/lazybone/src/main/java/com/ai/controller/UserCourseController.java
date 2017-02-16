@@ -6,14 +6,17 @@ import com.ai.domain.UserCourse;
 import com.ai.domain.UserExerciseLog;
 import com.ai.service.interfaces.ICourseService;
 import com.ai.service.interfaces.IUserCourseService;
+import com.ai.util.consts.CommonConst;
 import com.ai.util.consts.CommonConst.*;
 import com.ai.util.time.TimeUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +36,7 @@ public class UserCourseController {
     @PostMapping(path = "/insertUserCourse")
     public UserCourse saveUserCourse(@RequestBody UserCourse userCourse){
         //construct UserCourse
-        userCourse.setState(State.invalid);
+        userCourse.setState(State.valid);
             //caclulate endDate
               //inquiry course days
         int days=userCourse.getCourse().getCourseDays();
@@ -42,13 +45,42 @@ public class UserCourseController {
         //generate today exercise log
         List<UserExerciseLog> exerciseLogs = new ArrayList<>();
         List<CourseItem> list=userCourse.getCourse().getCourseItems();
+        generateExerciseLog(userCourse, exerciseLogs, list);
+        userCourse.setUserExerciseLogs(exerciseLogs);
+        return userCourseService.save(userCourse);
+    }
+
+    private void generateExerciseLog(UserCourse userCourse, List<UserExerciseLog> exerciseLogs, List<CourseItem> list) {
         list.stream().forEach(e -> {UserExerciseLog exerciseLog=new UserExerciseLog();
                                     exerciseLog.setExerciseType(e.getExerciseType());
                                     exerciseLog.setState(State.valid);
                                     exerciseLog.setUserCourse(userCourse);
                                     exerciseLog.setUserId(userCourse.getUserId());
                                     exerciseLogs.add(exerciseLog);});
-        userCourse.setUserExerciseLogs(exerciseLogs);
-        return userCourseService.save(userCourse);
+    }
+
+    @PostMapping(path = "/queryMyTodayExerciseInfo")
+    public List<UserExerciseLog> queryCurrentExerciseInfo(@RequestBody UserCourse userCourse){
+        List<UserExerciseLog> list=userCourse.getUserExerciseLogs();
+        if(list.isEmpty()){
+            List<UserExerciseLog> exerciseLogs = new ArrayList<>();
+            List<CourseItem> courseItems=userCourse.getCourse().getCourseItems();
+            this.generateExerciseLog(userCourse,exerciseLogs,courseItems);
+            userCourse.setUserExerciseLogs(exerciseLogs);
+            return userCourseService.save(userCourse).getUserExerciseLogs();
+        }else{
+            return list;
+        }
+    }
+
+    @PostMapping(path = "/giveUpCourse")
+    public void giveUpCourse(@RequestBody UserCourse userCourse){
+        UserCourse oldUserCourse=userCourseService.findByUserIdAndUserCourse(userCourse.getUserId(),userCourse.getCourse());
+        oldUserCourse.setState(State.invalid);
+        oldUserCourse.setEndDate(new DateTime().toDate());
+        List<UserExerciseLog> userExerciseLogs=oldUserCourse.getUserExerciseLogs();
+        userExerciseLogs.stream().forEach(e -> e.setState(State.invalid));
+        userCourseService.save(oldUserCourse);
+
     }
 }

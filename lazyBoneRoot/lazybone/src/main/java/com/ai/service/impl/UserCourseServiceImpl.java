@@ -1,5 +1,6 @@
 package com.ai.service.impl;
 
+import com.ai.domain.Course;
 import com.ai.domain.UserCourse;
 import com.ai.repository.UserCourseRepository;
 import com.ai.service.interfaces.IUserCourseService;
@@ -24,5 +25,10 @@ public class UserCourseServiceImpl implements IUserCourseService {
     @Override
     public UserCourse save(UserCourse userCourse) {
         return userCourseRepository.save(userCourse);
+    }
+
+    @Override
+    public UserCourse findByUserIdAndUserCourse(String userId, Course course) {
+        return userCourseRepository.findByUserIdAndUserCourseId(userId,course);
     }
 }

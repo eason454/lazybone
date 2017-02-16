@@ -24,7 +24,7 @@ public class CourseItem {
     @JoinColumn(name = "exercise_type")
     private FitAction exerciseType;
     @Column(name = "exercise_unit")
-    private int exerciseUnit;
+    private String exerciseUnit;
     @Column(name = "require_times")
     private int requireTimes;
     private String imageUrl;
@@ -59,7 +59,7 @@ public class CourseItem {
     public CourseItem() {
     }
 
-    public CourseItem(String itemName, FitAction exerciseType, int exerciseUnit, int requireTimes, String imageUrl, Date createDate, Date updateDate, Course course) {
+    public CourseItem(String itemName, FitAction exerciseType, String exerciseUnit, int requireTimes, String imageUrl, Date createDate, Date updateDate, Course course) {
         this.itemName = itemName;
         this.exerciseType = exerciseType;
         this.exerciseUnit = exerciseUnit;
@@ -94,11 +94,11 @@ public class CourseItem {
         this.exerciseType = exerciseType;
     }
 
-    public int getExerciseUnit() {
+    public String getExerciseUnit() {
         return exerciseUnit;
     }
 
-    public void setExerciseUnit(int exerciseUnit) {
+    public void setExerciseUnit(String exerciseUnit) {
         this.exerciseUnit = exerciseUnit;
     }
 

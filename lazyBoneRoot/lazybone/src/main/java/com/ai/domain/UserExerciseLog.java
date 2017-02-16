@@ -23,6 +23,7 @@ public class UserExerciseLog {
     @Column(name = "user_id")
     private String userId;
     @ManyToOne
+    @JoinColumn(name = "user_course_id")
     private UserCourse userCourse;
     @Column(name = "actual_count")
     private int actualCount;
