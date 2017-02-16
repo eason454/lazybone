@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface UserCourseRepository extends JpaRepository<UserCourse,String> {
     List<UserCourse> findByUserIdAndState(String userId,CommonConst.State state);
-    UserCourse findByUserIdAndUserCourseId(String userId,Course course);
+    UserCourse findByUserIdAndCourseId(String userId,String course);
 }

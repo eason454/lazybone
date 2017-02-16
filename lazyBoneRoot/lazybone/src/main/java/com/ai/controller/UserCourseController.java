@@ -6,12 +6,13 @@ import com.ai.domain.UserExerciseLog;
 import com.ai.service.interfaces.ICourseService;
 import com.ai.service.interfaces.IUserCourseService;
 import com.ai.util.consts.CommonConst.State;
+import com.ai.util.consts.CommonConst;
+import com.ai.util.consts.CommonConst.*;
+import com.ai.util.exception.ResourceExistException;
 import com.ai.util.time.TimeUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,8 +31,13 @@ public class UserCourseController {
     public List<UserCourse> queryHistoryCourse(@RequestBody String userId){
         return userCourseService.queryHistoryCourse(userId);
     }
-    @PostMapping(path = "/insertUserCourse")
+    @RequestMapping(path = "/insertUserCourse",method = RequestMethod.POST)
     public UserCourse saveUserCourse(@RequestBody UserCourse userCourse){
+        //whether exists
+        UserCourse oldUserCourse = userCourseService.findByUserIdAndUserCourse(userCourse.getUserId(), userCourse.getCourse());
+        if(oldUserCourse!=null){
+            throw new ResourceExistException(oldUserCourse.getUserCourseId());
+        }
         //construct UserCourse
         userCourse.setState(State.valid);
             //caclulate endDate
@@ -44,7 +50,9 @@ public class UserCourseController {
         List<CourseItem> list=userCourse.getCourse().getCourseItems();
         generateExerciseLog(userCourse, exerciseLogs, list);
         userCourse.setUserExerciseLogs(exerciseLogs);
-        return userCourseService.save(userCourse);
+        UserCourse userCourseResult=userCourseService.save(userCourse);
+        userCourseResult.getCourse();//load course
+        return userCourseResult;
     }
 
     private void generateExerciseLog(UserCourse userCourse, List<UserExerciseLog> exerciseLogs, List<CourseItem> list) {
