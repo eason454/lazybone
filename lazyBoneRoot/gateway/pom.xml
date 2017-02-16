@@ -27,5 +27,22 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-zuul</artifactId>
 		</dependency>
+		<!-- 为了在非jvm语言中使用eureka,ribbon,configserver,Spring Cloud Netflix Sidecar受Netflix Prana启发.包含了一个简单的http的api获取所有的service实例
+       也可以通过内嵌的Zuul Proxy代理服务的调用,非jvm应用应该实现健康检查,确保sidecar能给eureka报告应用是否还在线
+       -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-netflix-sidecar</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-lang</artifactId>
+					<groupId>commons-lang</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>
+		</dependency>
 	</dependencies>
 </project>

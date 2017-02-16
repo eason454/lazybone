@@ -1,0 +1,29 @@
+server:
+  port: 10001
+sidecar:
+  port: 8000
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+#zuul可以设置哪些服务不对提供
+zuul:
+  host:
+    max-total-connections: 200
+    max-per-route-connections: 20
+  routes:
+    users: /myusers/*
+#  prefix: /api
+#  strip-prefix: false
+eureka:
+  instance:
+    hostname: gateway
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://lazybone:8761/eureka/
