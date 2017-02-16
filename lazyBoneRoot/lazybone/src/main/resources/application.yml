@@ -20,3 +20,11 @@ server:
   context-path: /lazybone
 logging:
   level: org.hibernate.sql=debug
+eureka:
+  instance:
+    hostname: lazybone
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://lazybone:8761/eureka/
