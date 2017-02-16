@@ -10,6 +10,8 @@ import java.util.Date;
 /**
  * Created by eason on 2017/2/16.
  */
+@Entity
+@Table(name="user_exercise_log")
 public class UserExerciseLog {
     @Id
     @GeneratedValue(generator="system-uuid")

@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class Course {
     @Column(name = "course_days")
     private int courseDays;
     @OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<CourseItem> courseItems;
+    private List<CourseItem> courseItems=new ArrayList<>();
     public void addCourseItem(CourseItem item){
         courseItems.add(item);
         item.setCourse(this);

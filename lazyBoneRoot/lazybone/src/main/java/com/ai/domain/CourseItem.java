@@ -10,6 +10,8 @@ import java.util.Date;
 /**
  * Created by eason on 2017/2/16.
  */
+@Entity
+@Table(name="course_item")
 public class CourseItem {
     @Id
     @GeneratedValue(generator="system-uuid")

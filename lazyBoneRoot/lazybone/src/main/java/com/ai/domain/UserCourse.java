@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class UserCourse {
     @Column(name = "user_id")
     private String userId;
     @OneToMany(mappedBy = "userCourse",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<UserExerciseLog> userExerciseLogs;
+    private List<UserExerciseLog> userExerciseLogs=new ArrayList<>();
 
     public List<UserExerciseLog> getUserExerciseLogs() {
         return userExerciseLogs;
