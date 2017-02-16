@@ -1,6 +1,7 @@
 package com.ai.controller;
 
 import com.ai.domain.Course;
+import com.ai.domain.CourseItem;
 import com.ai.domain.UserCourse;
 import com.ai.domain.UserExerciseLog;
 import com.ai.service.interfaces.ICourseService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +40,15 @@ public class UserCourseController {
         Date endDate= TimeUtils.getEndDateWithDays(days);
         userCourse.setEndDate(endDate);
         //generate today exercise log
+        List<UserExerciseLog> exerciseLogs = new ArrayList<>();
+        List<CourseItem> list=userCourse.getCourse().getCourseItems();
+        list.stream().forEach(e -> {UserExerciseLog exerciseLog=new UserExerciseLog();
+                                    exerciseLog.setExerciseType(e.getExerciseType());
+                                    exerciseLog.setState(State.valid);
+                                    exerciseLog.setUserCourse(userCourse);
+                                    exerciseLog.setUserId(userCourse.getUserId());
+                                    exerciseLogs.add(exerciseLog);});
+        userCourse.setUserExerciseLogs(exerciseLogs);
         return userCourseService.save(userCourse);
     }
 }
