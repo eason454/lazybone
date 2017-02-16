@@ -1,5 +1,9 @@
 package com.ai.domain;
 
+import com.ai.util.consts.CommonConst;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,7 +28,8 @@ public class UserCourse {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-    private int state;
+    @Enumerated(EnumType.ORDINAL)
+    private CommonConst.State state;
     @Column(name = "update_date")
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -35,6 +40,7 @@ public class UserCourse {
     private Date endDate;
     @OneToOne
     @JoinColumn(name = "course_id")
+    @JsonProperty(value ="courseTemplateId",required = true)
     private Course course;
     @Column(name = "user_id")
     private String userId;
@@ -80,11 +86,11 @@ public class UserCourse {
         this.createDate = createDate;
     }
 
-    public int getState() {
+    public CommonConst.State getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(CommonConst.State state) {
         this.state = state;
     }
 
@@ -115,13 +121,13 @@ public class UserCourse {
     public UserCourse() {
     }
 
-
-    public UserCourse(Date createDate, int state, Date updateDate, Date endDate, Course course, String userId) {
+    public UserCourse(Date createDate, CommonConst.State state, Date updateDate, Date endDate, Course course, String userId, List<UserExerciseLog> userExerciseLogs) {
         this.createDate = createDate;
         this.state = state;
         this.updateDate = updateDate;
         this.endDate = endDate;
         this.course = course;
         this.userId = userId;
+        this.userExerciseLogs = userExerciseLogs;
     }
 }
