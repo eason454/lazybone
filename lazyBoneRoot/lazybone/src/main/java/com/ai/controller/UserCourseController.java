@@ -1,13 +1,11 @@
 package com.ai.controller;
 
-import com.ai.domain.Course;
 import com.ai.domain.CourseItem;
 import com.ai.domain.UserCourse;
 import com.ai.domain.UserExerciseLog;
 import com.ai.service.interfaces.ICourseService;
 import com.ai.service.interfaces.IUserCourseService;
-import com.ai.util.consts.CommonConst;
-import com.ai.util.consts.CommonConst.*;
+import com.ai.util.consts.CommonConst.State;
 import com.ai.util.time.TimeUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -75,12 +72,17 @@ public class UserCourseController {
 
     @PostMapping(path = "/giveUpCourse")
     public void giveUpCourse(@RequestBody UserCourse userCourse){
-        UserCourse oldUserCourse=userCourseService.findByUserIdAndUserCourse(userCourse.getUserId(),userCourse.getCourse());
+        UserCourse oldUserCourse=userCourseService.findByUserIdAndUserCourse(userCourse.getUserId(), userCourse.getCourse());
         oldUserCourse.setState(State.invalid);
         oldUserCourse.setEndDate(new DateTime().toDate());
         List<UserExerciseLog> userExerciseLogs=oldUserCourse.getUserExerciseLogs();
         userExerciseLogs.stream().forEach(e -> e.setState(State.invalid));
         userCourseService.save(oldUserCourse);
 
+    }
+
+    @PostMapping(path = "/queryMyStudents")
+    public  List<String> queryUserByCourseId(@RequestBody String courseId){
+        return null;
     }
 }
