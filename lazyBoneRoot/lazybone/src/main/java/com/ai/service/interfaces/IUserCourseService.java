@@ -1,7 +1,7 @@
 package com.ai.service.interfaces;
 
+import com.ai.domain.Course;
 import com.ai.domain.UserCourse;
-import com.ai.util.consts.CommonConst;
 
 import java.util.List;
 
@@ -11,4 +11,5 @@ import java.util.List;
 public interface IUserCourseService {
      List<UserCourse> queryHistoryCourse(String userId);
      UserCourse save(UserCourse userCourse);
+     UserCourse findByUserIdAndUserCourse(String userId,Course course);
 }

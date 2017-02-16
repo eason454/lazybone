@@ -4,7 +4,6 @@ insert into lazy_bone_course(id,description,create_date,name,update_date,url,cou
          now(),'办公室恢复',now(),'http://ac-8ueciueo.clouddn.com/daKvQelA0VhT4qv4JfkfPnSd8ARMsp1WsJxIToeL.png',30),
          (12,'跳结石',now(),'跳结石',now(),'http://ac-8ueciueo.clouddn.com/s9DKy54iBq6Ra4c2gwyeoA98xtK6Bo39MlhBY04d.png',7);
 
-
 insert into fit_action(id,action_description,action_type,action_name,count_unit,create_date,state)
   values (1,'下蹲',0,'下蹲','次',now(),1),
          (2,'跳跃',1,'跳跃','次',now(),1),
