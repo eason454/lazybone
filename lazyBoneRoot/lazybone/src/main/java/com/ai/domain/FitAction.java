@@ -1,5 +1,6 @@
 package com.ai.domain;
 
+import com.ai.util.consts.CommonConst;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -34,7 +35,8 @@ public class FitAction {
     private Date createDate;
 
     @Column(name="state")
-    private int state;
+    @Enumerated(EnumType.ORDINAL)
+    private CommonConst.State state;
 
     public Date getCreateDate() {
         return createDate;
@@ -44,11 +46,11 @@ public class FitAction {
         this.createDate = createDate;
     }
 
-    public int getState() {
+    public CommonConst.State getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(CommonConst.State state) {
         this.state = state;
     }
 
@@ -96,5 +98,14 @@ public class FitAction {
 
 
     public FitAction() {
+    }
+
+    public FitAction(String actionName, String actionType, String countUnit, Date createDate, CommonConst.State state, String actionDescription) {
+        this.actionName = actionName;
+        this.actionType = actionType;
+        this.countUnit = countUnit;
+        this.createDate = createDate;
+        this.state = state;
+        this.actionDescription = actionDescription;
     }
 }

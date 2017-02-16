@@ -20,8 +20,9 @@ public class CourseItem {
     private String courseItemId;
     @Column(name = "item_name")
     private String itemName;
-    @Column(name = "exercise_type")
-    private int exerciseType;
+    @ManyToOne
+    @JoinColumn(name = "exercise_type")
+    private FitAction exerciseType;
     @Column(name = "exercise_unit")
     private int exerciseUnit;
     @Column(name = "require_times")
@@ -54,7 +55,11 @@ public class CourseItem {
         return courseItemId.hashCode();
     }
 
-    public CourseItem(String itemName, int exerciseType, int exerciseUnit, int requireTimes, String imageUrl, Date createDate, Date updateDate, Course course) {
+
+    public CourseItem() {
+    }
+
+    public CourseItem(String itemName, FitAction exerciseType, int exerciseUnit, int requireTimes, String imageUrl, Date createDate, Date updateDate, Course course) {
         this.itemName = itemName;
         this.exerciseType = exerciseType;
         this.exerciseUnit = exerciseUnit;
@@ -63,9 +68,6 @@ public class CourseItem {
         this.createDate = createDate;
         this.updateDate = updateDate;
         this.course = course;
-    }
-
-    public CourseItem() {
     }
 
     public String getCourseItemId() {
@@ -84,11 +86,11 @@ public class CourseItem {
         this.itemName = itemName;
     }
 
-    public int getExerciseType() {
+    public FitAction getExerciseType() {
         return exerciseType;
     }
 
-    public void setExerciseType(int exerciseType) {
+    public void setExerciseType(FitAction exerciseType) {
         this.exerciseType = exerciseType;
     }
 
