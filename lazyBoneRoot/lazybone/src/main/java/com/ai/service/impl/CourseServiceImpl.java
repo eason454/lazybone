@@ -6,6 +6,7 @@ import com.ai.service.interfaces.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,5 +26,10 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public Course queryCourceById(String uuid) {
         return courseRepository.findOne(uuid);
+    }
+
+    @Override
+    public List<Course> queryAllCourses() {
+        return courseRepository.findAll();
     }
 }

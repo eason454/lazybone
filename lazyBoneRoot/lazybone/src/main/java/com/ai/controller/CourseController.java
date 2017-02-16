@@ -5,6 +5,7 @@ import com.ai.service.interfaces.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,8 +19,13 @@ public class CourseController {
     public Course save(@RequestBody Course course){
         return courseService.save(course);
     }
-    @GetMapping(path = "/queryCourse/{course_id}")
+    @GetMapping(path = "/queryCourseInfo/{course_id}")
     public Course queryCourseById(@PathVariable("course_id") String id){
         return courseService.queryCourceById(id);
+    }
+
+    @PostMapping(path = "/queryAllLBTCourses")
+    public List<Course> queryAllCourses(){
+        return courseService.queryAllCourses();
     }
 }

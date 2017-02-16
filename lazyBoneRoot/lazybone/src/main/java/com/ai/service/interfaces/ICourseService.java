@@ -2,6 +2,7 @@ package com.ai.service.interfaces;
 
 import com.ai.domain.Course;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -10,4 +11,5 @@ import java.util.UUID;
 public interface ICourseService {
     Course save(Course course);
     Course queryCourceById(String uuid);
+    List<Course> queryAllCourses();
 }
