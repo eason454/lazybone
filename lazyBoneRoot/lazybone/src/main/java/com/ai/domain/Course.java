@@ -4,10 +4,12 @@ package com.ai.domain;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -34,6 +36,44 @@ public class Course {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateDate;
+    @Column(name = "course_days")
+    private int courseDays;
+    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<CourseItem> courseItems;
+    public void addCourseItem(CourseItem item){
+        courseItems.add(item);
+        item.setCourse(this);
+    }
+    public void removeCourseItem(CourseItem item){
+        courseItems.remove(item);
+        item.setCourse(null);
+    }
+    public Course(String courseDesc, String name, String url, Date createDate, Date updateDate, int courseDays, List<CourseItem> courseItems) {
+        this.courseDesc = courseDesc;
+        this.name = name;
+        this.url = url;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+        this.courseDays = courseDays;
+        this.courseItems = courseItems;
+    }
+
+    public List<CourseItem> getCourseItems() {
+
+        return courseItems;
+    }
+
+    public void setCourseItems(List<CourseItem> courseItems) {
+        this.courseItems = courseItems;
+    }
+
+    public int getCourseDays() {
+        return courseDays;
+    }
+
+    public void setCourseDays(int courseDays) {
+        this.courseDays = courseDays;
+    }
 
     public String getId() {
         return id;
@@ -86,11 +126,4 @@ public class Course {
     public Course() {
     }
 
-    public Course(String courseDesc, String name, String url, Date createDate, Date updateDate) {
-        this.courseDesc = courseDesc;
-        this.name = name;
-        this.url = url;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-    }
 }
