@@ -1,5 +1,6 @@
 package com.ai.domain;
 
+import com.ai.util.consts.CommonConst;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -36,9 +37,30 @@ public class UserExerciseLog {
     @Column(name = "exercise_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date exerciseDate;
-    private int state;
+    @Enumerated(EnumType.ORDINAL)
+    private CommonConst.State state;
+    @ManyToOne
+    @JoinColumn(name = "exercise_type")
+    private FitAction exerciseType;
 
-    public UserExerciseLog(String userId, UserCourse userCourse, int actualCount, Date createDate, Date updateDate, Date exerciseDate, int state) {
+    public UserExerciseLog() {
+
+    }
+
+    public void setState(CommonConst.State state) {
+        this.state = state;
+    }
+
+    public FitAction getExerciseType() {
+        return exerciseType;
+    }
+
+    public void setExerciseType(FitAction exerciseType) {
+        this.exerciseType = exerciseType;
+    }
+
+    public UserExerciseLog(String userId, UserCourse userCourse, int actualCount, Date createDate, Date updateDate, Date exerciseDate, CommonConst.State state, FitAction exerciseType) {
+
         this.userId = userId;
         this.userCourse = userCourse;
         this.actualCount = actualCount;
@@ -46,10 +68,7 @@ public class UserExerciseLog {
         this.updateDate = updateDate;
         this.exerciseDate = exerciseDate;
         this.state = state;
-    }
-
-    public UserExerciseLog() {
-
+        this.exerciseType = exerciseType;
     }
 
     public String getLogId() {
@@ -108,13 +127,6 @@ public class UserExerciseLog {
         this.exerciseDate = exerciseDate;
     }
 
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
 
     @Override
     public boolean equals(Object o) {
