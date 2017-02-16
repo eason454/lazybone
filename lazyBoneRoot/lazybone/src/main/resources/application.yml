@@ -13,6 +13,8 @@ spring:
     username: lazybone
     password: ailab2020
     type: com.zaxxer.hikari.HikariDataSource
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 server:
   port: 9111
   context-path: /lazybone
