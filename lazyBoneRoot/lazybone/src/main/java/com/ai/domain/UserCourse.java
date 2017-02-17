@@ -35,7 +35,6 @@ public class UserCourse {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateDate;
     @Column(name = "end_date")
-    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
     @OneToOne

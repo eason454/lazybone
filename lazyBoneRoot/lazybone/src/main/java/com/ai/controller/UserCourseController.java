@@ -9,6 +9,7 @@ import com.ai.service.interfaces.IUserCourseService;
 import com.ai.util.consts.CommonConst;
 import com.ai.util.consts.CommonConst.*;
 import com.ai.util.exception.ResourceExistException;
+import com.ai.util.exception.ResourceNotExistException;
 import com.ai.util.time.TimeUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,9 @@ public class UserCourseController {
         userCourse.setState(State.valid);
             //caclulate endDate
               //inquiry course days
-        int days=userCourse.getCourse().getCourseDays();
+        Course course = service.queryCourceById(userCourse.getCourse().getId());
+        if(course==null) throw new ResourceNotExistException(userCourse.getCourse().getId(),Course.class.getSimpleName());
+        int days=course.getCourseDays();
         Date endDate= TimeUtils.getEndDateWithDays(days);
         userCourse.setEndDate(endDate);
         //generate today exercise log
@@ -79,9 +82,10 @@ public class UserCourseController {
         }
     }
 
-    @PostMapping(path = "/giveUpCourse")
+    @RequestMapping(path = "/giveUpCourse",method = RequestMethod.POST)
     public void giveUpCourse(@RequestBody UserCourse userCourse){
         UserCourse oldUserCourse=userCourseService.findByUserIdAndUserCourse(userCourse.getUserId(),userCourse.getCourse());
+        if (oldUserCourse==null) throw new ResourceNotExistException(userCourse.getUserId(),userCourse.getClass().getSimpleName());
         oldUserCourse.setState(State.invalid);
         oldUserCourse.setEndDate(new DateTime().toDate());
         List<UserExerciseLog> userExerciseLogs=oldUserCourse.getUserExerciseLogs();
