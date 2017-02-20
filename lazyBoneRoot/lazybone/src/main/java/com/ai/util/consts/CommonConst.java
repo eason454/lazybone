@@ -5,9 +5,4 @@ package com.ai.util.consts;
  */
 public interface CommonConst {
     enum State{invalid,valid;}
-    interface ErrorCode{
-           int existsCode=1001;
-           int notExistsCode=1002;
-
-    }
 }

@@ -5,11 +5,10 @@ package com.ai.util.exception;
  */
 public class ResourceNotExistException extends RuntimeException {
     private  String id;
-    private String message=" resource not exists";
+    private String message="resource not exists";
 
-    public ResourceNotExistException(String id,String type) {
+    public ResourceNotExistException(String id) {
         this.id = id;
-        this.message=" "+type+this.message;
     }
 
     public String getId() {

@@ -5,7 +5,7 @@ package com.ai.util.exception;
  */
 public class ResourceExistException extends RuntimeException{
     private  String id;
-    private String message=" resource already exists";
+    private String message="resource already exists";
 
     public ResourceExistException(String id) {
         this.id = id;
