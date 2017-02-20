@@ -1,8 +1,6 @@
 package com.ai.domain;
 
 import com.ai.util.consts.CommonConst;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -44,6 +42,18 @@ public class UserCourse {
     private Course course;
     @Column(name = "user_id")
     private String userId;
+
+    @Column(name = "progress")
+    private String progress;
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
     @OneToMany(mappedBy = "userCourse",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<UserExerciseLog> userExerciseLogs=new ArrayList<>();
 

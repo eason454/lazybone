@@ -6,8 +6,6 @@ import com.ai.domain.UserExerciseLog;
 import com.ai.service.interfaces.ICourseService;
 import com.ai.service.interfaces.IUserCourseService;
 import com.ai.util.consts.CommonConst.State;
-import com.ai.util.consts.CommonConst;
-import com.ai.util.consts.CommonConst.*;
 import com.ai.util.exception.ResourceExistException;
 import com.ai.util.time.TimeUtils;
 import org.joda.time.DateTime;
