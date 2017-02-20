@@ -14,4 +14,5 @@ public interface UserCourseRepository extends JpaRepository<UserCourse,String> {
     List<UserCourse> findByUserIdAndState(String userId,CommonConst.State state);
     UserCourse findByUserIdAndCourseIdAndState(String userId, String course, CommonConst.State state);
     List<UserCourse>  findByCourseIdAndState(String courseId, CommonConst.State state);
+    UserCourse findByUserIdAndCourseId(String userId, String courseId);
 }
