@@ -24,7 +24,7 @@
       <data-type>datetime|0</data-type>
     </column>
     <column id="16" parent="8" name="exercise_unit">
-      <data-type>varchar(255)|0</data-type>
+      <data-type>int(11)|0</data-type>
     </column>
     <column id="17" parent="8" name="image_url">
       <data-type>varchar(255)|0</data-type>
