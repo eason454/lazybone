@@ -29,6 +29,6 @@ public class UserCourseServiceImpl implements IUserCourseService {
 
     @Override
     public UserCourse findByUserIdAndUserCourse(String userId, Course course) {
-        return userCourseRepository.findByUserIdAndCourseId(userId,course.getId());
+        return userCourseRepository.findByUserIdAndCourseIdAndState(userId,course.getId(), CommonConst.State.valid);
     }
 }

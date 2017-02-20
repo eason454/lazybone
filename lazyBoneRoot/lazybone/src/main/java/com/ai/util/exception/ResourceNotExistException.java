@@ -3,12 +3,13 @@ package com.ai.util.exception;
 /**
  * Created by eason on 2017/2/16.
  */
-public class ResourceExistException extends RuntimeException{
+public class ResourceNotExistException extends RuntimeException {
     private  String id;
-    private String message=" resource already exists";
+    private String message=" resource not exists";
 
-    public ResourceExistException(String id) {
+    public ResourceNotExistException(String id,String type) {
         this.id = id;
+        this.message=" "+type+this.message;
     }
 
     public String getId() {
