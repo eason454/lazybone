@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ai.domain.CourseUserRank;
 import com.ai.repository.UserCourseRepository;
 import com.ai.service.interfaces.ITraineeService;
 
@@ -15,8 +16,8 @@ public class TraineeServiceImpl implements ITraineeService {
 	UserCourseRepository userCourseRepository;
 	
 	@Override
-	public List<String> getRank(String userId, String courseId) throws Exception {
-		// TODO Auto-generated method stub
+	public List<CourseUserRank> getRank(String userId, String courseId) throws Exception {
+		
 		return null;
 	}
 }
