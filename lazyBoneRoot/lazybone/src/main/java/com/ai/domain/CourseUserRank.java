@@ -25,6 +25,8 @@ public class CourseUserRank {
 	String userId;
 	
 	long rank;
+	
+	long count;
 
 	public String getUserRankId() {
 		return userRankId;
@@ -57,6 +59,12 @@ public class CourseUserRank {
 	public void setRank(long rank) {
 		this.rank = rank;
 	}
-	
-	
+
+	public long getCount() {
+		return count;
+	}
+
+	public void setCount(long count) {
+		this.count = count;
+	}
 }
