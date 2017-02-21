@@ -1,8 +1,10 @@
 spring:
+  profiles:
+    active: production
   application:
     name: lazybone
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
+      date-format: yyyy-MM-dd HH:mm:ss
 server:
   port: 9111
   context-path: /lazybone
@@ -17,31 +19,29 @@ eureka:
     serviceUrl:
       defaultZone: http://lazybone:8761/eureka/
 ---
-  profiles: default
+spring:
+  profiles: production
+  jpa:
+    database: mysql
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://10.5.5.60:3306/lazybone?characterEncoding=utf8&useSSL=false
     username: lazybone
     password: ailab2020
     type: com.zaxxer.hikari.HikariDataSource
-  spring:
-    jpa:
-      database-platform: MYSQL
-      database: mysql
-      generate-ddl: true
-      hibernate:
-        ddl-auto: create
-      show-sql: true
 ---
+spring:
   profiles: dev
-  spring:
-    datasource:
-      url: jdbc:h2:mem:testdb;Mode=Mysql
-      platform: h2
-      continue-on-error: true
-    jpa:
-      hibernate:
-        ddl-auto: create
-      database-platform: H2
-
-
+  jpa:
+    database: h2
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:h2:mem:testdb;Mode=Mysql
+    platform: h2
+server:
+  port: 9113
