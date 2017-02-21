@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.ai.domain.Course;
 import com.ai.domain.UserCourse;
 import com.ai.util.consts.CommonConst;
 
@@ -13,7 +14,7 @@ import com.ai.util.consts.CommonConst;
 public interface UserCourseRepository extends JpaRepository<UserCourse,String> {
     List<UserCourse> findByUserIdAndState(String userId,CommonConst.State state);
     UserCourse findByUserIdAndCourseIdAndState(String userId, String course, CommonConst.State state);
-    List<UserCourse>  findByCourseIdAndState(String courseId, CommonConst.State state);
+    List<UserCourse>  findByCourseAndState(Course course, CommonConst.State state);
     UserCourse findByUserIdAndCourseId(String userId, String courseId);
     List<UserCourse>  findByState(CommonConst.State state);
 }
