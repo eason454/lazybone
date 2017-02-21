@@ -1,5 +1,6 @@
 package com.ai.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -36,7 +37,8 @@ public class CourseItem {
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateDate;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("courseItems")
     private Course course;
 
     @Override
