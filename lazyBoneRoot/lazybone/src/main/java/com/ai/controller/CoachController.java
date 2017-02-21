@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +16,7 @@ public class CoachController {
 	ICoachService coachService;
 	
 	@PostMapping(path="/queryMyStudents")
-	public Page<String> queryMyStudents(@RequestParam String courseId,@RequestParam Pageable pageable) throws Exception{
+	public Page<String> queryMyStudents(@RequestParam String courseId, Pageable pageable) throws Exception{
 		return coachService.getMyStudents(courseId,pageable);
 	}
 

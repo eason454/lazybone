@@ -44,25 +44,38 @@ public class UserCourse {
     private Course course;
     @Column(name = "user_id")
     private String userId;
-    @OneToMany(mappedBy = "userCourse",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<UserExerciseLog> userExerciseLogs=new ArrayList<>();
+    private int process;
+    
+    
+    
+//    @OneToMany(mappedBy = "userCourse",cascade = CascadeType.ALL,orphanRemoval = true)
+//    private List<UserExerciseLog> userExerciseLogs=new ArrayList<>();
 
-    public List<UserExerciseLog> getUserExerciseLogs() {
-        return userExerciseLogs;
-    }
+//    public List<UserExerciseLog> getUserExerciseLogs() {
+//        return userExerciseLogs;
+//    }
+//
+//    public void setUserExerciseLogs(List<UserExerciseLog> userExerciseLogs) {
+//        this.userExerciseLogs = userExerciseLogs;
+//    }
+//    public void addUserExerciseLog(UserExerciseLog userExerciseLog){
+//        userExerciseLogs.add(userExerciseLog);
+//        userExerciseLog.setUserCourse(this);
+//    }
+//    public void removeUserExerciseLog(UserExerciseLog userExerciseLog){
+//        userExerciseLogs.remove(userExerciseLog);
+//        userExerciseLog.setUserCourse(null);
+//    }
+    
+    public int getProcess() {
+		return process;
+	}
 
-    public void setUserExerciseLogs(List<UserExerciseLog> userExerciseLogs) {
-        this.userExerciseLogs = userExerciseLogs;
-    }
-    public void addUserExerciseLog(UserExerciseLog userExerciseLog){
-        userExerciseLogs.add(userExerciseLog);
-        userExerciseLog.setUserCourse(this);
-    }
-    public void removeUserExerciseLog(UserExerciseLog userExerciseLog){
-        userExerciseLogs.remove(userExerciseLog);
-        userExerciseLog.setUserCourse(null);
-    }
-    public String getUserId() {
+	public void setProcess(int process) {
+		this.process = process;
+	}
+
+	public String getUserId() {
         return userId;
     }
 
@@ -121,13 +134,13 @@ public class UserCourse {
     public UserCourse() {
     }
 
-    public UserCourse(Date createDate, CommonConst.State state, Date updateDate, Date endDate, Course course, String userId, List<UserExerciseLog> userExerciseLogs) {
+    public UserCourse(Date createDate, CommonConst.State state, Date updateDate, Date endDate, Course course, String userId) {
         this.createDate = createDate;
         this.state = state;
         this.updateDate = updateDate;
         this.endDate = endDate;
         this.course = course;
         this.userId = userId;
-        this.userExerciseLogs = userExerciseLogs;
+//        this.userExerciseLogs = userExerciseLogs;
     }
 }
