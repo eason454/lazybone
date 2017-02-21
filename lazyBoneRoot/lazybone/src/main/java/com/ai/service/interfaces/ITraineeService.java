@@ -1,10 +1,11 @@
 package com.ai.service.interfaces;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.ai.domain.CourseUserRank;
 
 public interface ITraineeService {
 	
-	public List<CourseUserRank> getRank(String userId, String courseId) throws Exception;
+	public Page<CourseUserRank> getRank(String userId, String courseId ,Pageable pageable) throws Exception;
 }

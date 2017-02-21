@@ -1,8 +1,9 @@
 package com.ai.service.interfaces;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ICoachService {
 	
-	List<String> getMyStudents(String courseId)throws Exception;
+	Page<String> getMyStudents(String courseId,Pageable pageable)throws Exception;
 }
