@@ -1,11 +1,13 @@
 package com.ai.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ai.domain.CourseUserRank;
+import com.ai.repository.CourseRepository;
+import com.ai.repository.CousreUserRankRepository;
 import com.ai.repository.UserCourseRepository;
 import com.ai.service.interfaces.ITraineeService;
 
@@ -14,10 +16,13 @@ public class TraineeServiceImpl implements ITraineeService {
 	
 	@Autowired
 	UserCourseRepository userCourseRepository;
+	@Autowired
+	CousreUserRankRepository cousreUserRankRepository;
+	@Autowired
+	CourseRepository courseRepository;
 	
 	@Override
-	public List<CourseUserRank> getRank(String userId, String courseId) throws Exception {
-		
-		return null;
+	public Page<CourseUserRank> getRank(String userId, String courseId, Pageable pageable) throws Exception {
+		return cousreUserRankRepository.findByCourseIdOrderByRank(courseId,pageable);
 	}
 }

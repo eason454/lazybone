@@ -1,9 +1,9 @@
 package com.ai.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ai.domain.CourseUserRank;
@@ -15,10 +15,8 @@ public class TraineeController {
 	@Autowired
 	ITraineeService traineeSerivce;
 	
-	@GetMapping(path="/getRank/{courseId}/{userId}")
-	public List<CourseUserRank> getRank(String userId, String courseId) throws Exception{
-		return traineeSerivce.getRank(userId, courseId);
+	@PostMapping(path="/getRank")
+	public Page<CourseUserRank> getRank(String userId, String courseId,Pageable pageable) throws Exception{
+		return traineeSerivce.getRank(userId, courseId, pageable);
 	}
-	
-
 }

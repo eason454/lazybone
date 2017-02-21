@@ -62,6 +62,7 @@ public class UserCourseController {
                                     exerciseLog.setState(State.valid);
                                     exerciseLog.setUserCourse(userCourse);
                                     exerciseLog.setUserId(userCourse.getUserId());
+                                    exerciseLog.setRequireTimes(e.getRequireTimes());
                                     exerciseLogs.add(exerciseLog);});
     }
 

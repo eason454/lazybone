@@ -1,10 +1,11 @@
 package com.ai.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ai.service.interfaces.ICoachService;
@@ -15,9 +16,9 @@ public class CoachController {
 	@Autowired
 	ICoachService coachService;
 	
-	@GetMapping(path="/queryMyStudents/{courseId}")
-	public List<String> queryMyStudents(@PathVariable("courseId") String courseId) throws Exception{
-		return coachService.getMyStudents(courseId);
+	@PostMapping(path="/queryMyStudents")
+	public Page<String> queryMyStudents(@RequestParam String courseId,@RequestParam Pageable pageable) throws Exception{
+		return coachService.getMyStudents(courseId,pageable);
 	}
 
 }

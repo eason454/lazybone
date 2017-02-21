@@ -25,6 +25,7 @@ public class UserExerciseLog {
     @ManyToOne
     @JoinColumn(name = "user_course_id")
     private UserCourse userCourse;
+    //锻炼次数
     @Column(name = "actual_count")
     private int actualCount;
     @Column(name = "create_date")
@@ -44,6 +45,12 @@ public class UserExerciseLog {
     @JoinColumn(name = "exercise_type")
     private FitAction exerciseType;
 
+    //需要锻炼次数
+    @Column(name = "require_times")
+    private int requireTimes = 0 ;
+    //锻炼进度
+    private int process = 0;
+    
     public UserExerciseLog() {
 
     }
@@ -128,8 +135,29 @@ public class UserExerciseLog {
         this.exerciseDate = exerciseDate;
     }
 
+    
 
-    @Override
+    public int getRequireTimes() {
+		return requireTimes;
+	}
+
+	public void setRequireTimes(int requireTimes) {
+		this.requireTimes = requireTimes;
+	}
+
+	public int getProcess() {
+		return process;
+	}
+
+	public void setProcess(int process) {
+		this.process = process;
+	}
+
+	public CommonConst.State getState() {
+		return state;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

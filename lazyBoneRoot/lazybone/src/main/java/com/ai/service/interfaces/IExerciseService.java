@@ -1,11 +1,11 @@
 package com.ai.service.interfaces;
 
-import com.ai.pojo.CourseExerciseDetail;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.ai.domain.UserExerciseLog;
 
 public interface IExerciseService {
 
-	
-	public void createCourseDetail(String userId, String courseId) throws Exception;
-	
-	public CourseExerciseDetail getCourseDetail(String userId, String courseId) throws Exception;
+	public Page<UserExerciseLog> getCourseDetail(String userId, String courseId, Pageable pageable) throws Exception;
 }

@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,14 +15,17 @@ public class CourseUserRank {
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	String userRankId;
 	
-	@ManyToOne
-	@JoinColumn(name = "course_id")
-	Course course;
+	@Column(name = "course_id")
+	String courseId;
 	
 	@Column(name="user_id")
 	String userId;
 	
 	long rank;
+	
+	long count;
+	
+	long process;
 
 	public String getUserRankId() {
 		return userRankId;
@@ -34,12 +35,12 @@ public class CourseUserRank {
 		this.userRankId = userRankId;
 	}
 
-	public Course getCourse() {
-		return course;
+	public String getCourse() {
+		return courseId;
 	}
 
-	public void setCourse(Course course) {
-		this.course = course;
+	public void setCourse(String courseId) {
+		this.courseId = courseId;
 	}
 
 	public String getUserId() {
@@ -56,6 +57,22 @@ public class CourseUserRank {
 
 	public void setRank(long rank) {
 		this.rank = rank;
+	}
+
+	public long getCount() {
+		return count;
+	}
+
+	public void setCount(long count) {
+		this.count = count;
+	}
+
+	public long getProcess() {
+		return process;
+	}
+
+	public void setProcess(long process) {
+		this.process = process;
 	}
 	
 	
