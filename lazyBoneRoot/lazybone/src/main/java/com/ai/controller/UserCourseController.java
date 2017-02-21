@@ -1,13 +1,11 @@
 package com.ai.controller;
 
-import com.ai.domain.Course;
 import com.ai.domain.CourseItem;
 import com.ai.domain.UserCourse;
 import com.ai.domain.UserExerciseLog;
 import com.ai.service.interfaces.ICourseService;
 import com.ai.service.interfaces.IUserCourseService;
-import com.ai.util.consts.CommonConst;
-import com.ai.util.consts.CommonConst.*;
+import com.ai.util.consts.CommonConst.State;
 import com.ai.util.exception.ResourceExistException;
 import com.ai.util.time.TimeUtils;
 import org.joda.time.DateTime;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
