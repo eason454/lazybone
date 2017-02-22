@@ -33,9 +33,14 @@ public class UserCourseController {
     @Autowired
     private IExerciseService exerciseService;
     
-    @RequestMapping(path = "/queryMyHistoryExerciseInfo/{userId}")
-    public List<UserCourse> queryHistoryCourse(@PathVariable("userId") String userId){
+    @RequestMapping(path = "/queryAllUserCourse/{userId}")
+    public List<UserCourse> queryAllUserCourse(@PathVariable("userId") String userId){
         return userCourseService.queryHistoryCourse(userId);
+    }
+    
+    @RequestMapping(path = "/queryUserCourseValid/{userId}")
+    public List<UserCourse> queryUserCourseValid(@PathVariable("userId") String userId){
+        return userCourseService.queryUserCourse(userId);
     }
     
     @RequestMapping(path = "/insertUserCourse",method = RequestMethod.POST)
@@ -91,11 +96,11 @@ public class UserCourseController {
     @PostMapping(path = "/giveUpCourse")
     public void giveUpCourse(@RequestBody UserCourse userCourse) throws Exception{
         UserCourse oldUserCourse=userCourseService.findByUserIdAndUserCourse(userCourse.getUserId(),userCourse.getCourse());
-        oldUserCourse.setState(State.invalid);
+        oldUserCourse.setState(State.giveup);
         oldUserCourse.setEndDate(new DateTime().toDate());
         //删除失效运动记录逻辑
         List<UserExerciseLog> userExerciseLogs= exerciseService.queryUserExerciseByUserCourseId(userCourse.getUserCourseId());
-        userExerciseLogs.stream().forEach(e -> e.setState(State.invalid));
+        userExerciseLogs.stream().forEach(e -> e.setState(State.giveup));
         userCourseService.save(oldUserCourse);
         exerciseService.updateUserExercise(userExerciseLogs);
     }

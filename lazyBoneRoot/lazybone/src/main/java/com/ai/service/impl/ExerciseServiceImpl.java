@@ -76,6 +76,13 @@ public class ExerciseServiceImpl implements IExerciseService {
 		return userExerciseLogRepository.findByUserCourseIdOrderByExerciseDateDesc(userCourse.getUserCourseId(),
 				pageable);
 	}
+	
+	@Override
+	public Page<UserExerciseLog> getUserCourseDetail(String userId, String userCourseId, Pageable pageable) throws Exception {
+		UserCourse userCourse = userCourseRepository.findOne(userCourseId);
+		return userExerciseLogRepository.findByUserCourseIdOrderByExerciseDateDesc(userCourse.getUserCourseId(),
+				pageable);
+	}
 
 	@Override
 	public void recordExercise(String courseId, String userId, String exerciseType) throws Exception {
@@ -97,7 +104,7 @@ public class ExerciseServiceImpl implements IExerciseService {
 		userExerciseLog.setActualCount(userExerciseLog.getActualCount() + 1);
 		// 计算运动进度，如果多余规定运动数那么是100%，低于要求运动数计算运动百分比
 		int process = (int) (Math.floor(userExerciseLog.getActualCount() > userExerciseLog.getRequireTimes() ? 100
-				: userExerciseLog.getActualCount()*100 / userExerciseLog.getRequireTimes()));
+				: userExerciseLog.getActualCount() * 100 / userExerciseLog.getRequireTimes()));
 		userExerciseLog.setProcess(process);
 		// 更新运动记录
 		userExerciseLogRepository.save(userExerciseLog);
@@ -105,27 +112,28 @@ public class ExerciseServiceImpl implements IExerciseService {
 
 	@Override
 	@Scheduled(cron = "0 0 0 * * *")
-	//按日刷新进度和完成课程
-	public void refreshUserCourseProcess(){
+	// 按日刷新进度和完成课程
+	public void refreshUserCourseProcess() {
 		List<UserCourse> userCourses = userCourseRepository.findByState(State.valid);
 		// 循环每个有效课程
 		for (UserCourse userCourse : userCourses) {
-			//设置课程进度
+			// 设置课程进度
 			userCourse.setProcess(computerUserCourseProcess(userCourse));
 			userCourseRepository.save(userCourse);
-			//完成课程
+			// 完成课程
 			completeUserCourse(userCourse);
 		}
 	}
 
 	/**
 	 * 完成课程
+	 * 
 	 * @param userCourse
 	 */
-	public void completeUserCourse(UserCourse userCourse){
-		//是否需要完成课程
+	public void completeUserCourse(UserCourse userCourse) {
+		// 是否需要完成课程
 		Date date = new Date();
-		if(date.compareTo(userCourse.getEndDate()) > 0 ){
+		if (date.compareTo(userCourse.getEndDate()) > 0) {
 			userCourse.setState(State.complete);
 			try {
 				List<UserExerciseLog> userExerciseLogs = queryUserExerciseByUserCourseId(userCourse.getUserCourseId());
@@ -136,27 +144,33 @@ public class ExerciseServiceImpl implements IExerciseService {
 			}
 		}
 	}
-	
-	//计算当前课程进度
-	private int computerUserCourseProcess(UserCourse userCourse){
+
+	// 计算当前课程进度
+	private int computerUserCourseProcess(UserCourse userCourse) {
 		int resultProcess = 0;
 		int courseDay = userCourse.getCourse().getCourseDays();
 		int exeNumber = userCourse.getCourse().getCourseItems().size();
 		int exeProcess = 0;
-		for(CourseItem courseItem : userCourse.getCourse().getCourseItems()){
-			List<UserExerciseLog> userExerciseLogs = userExerciseLogRepository.findByCourseItemIdAndUserCourseId(courseItem.getCourseItemId(),userCourse.getUserCourseId());
-			for(UserExerciseLog userExerciseLog : userExerciseLogs){
+		for (CourseItem courseItem : userCourse.getCourse().getCourseItems()) {
+			List<UserExerciseLog> userExerciseLogs = userExerciseLogRepository
+					.findByCourseItemIdAndUserCourseId(courseItem.getCourseItemId(), userCourse.getUserCourseId());
+			for (UserExerciseLog userExerciseLog : userExerciseLogs) {
 				exeProcess += userExerciseLog.getProcess();
 			}
 		}
-		//对进度取整
-		resultProcess = (int) (Math.floor((exeProcess*100)/(exeNumber*courseDay*100)));
+		// 对进度取整
+		resultProcess = (int) (Math.floor((exeProcess * 100) / (exeNumber * courseDay * 100)));
 		return resultProcess;
 	}
 
 	@Override
 	public List<UserExerciseLog> queryUserExerciseInfo(String userId, Date startDate, Date endDate) throws Exception {
 		return userExerciseLogRepository.findByUserIdAndExerciseDateBetween(userId, startDate, endDate);
+	}
+	
+	@Override
+	public List<UserExerciseLog> queryUserExerciseInfo(String userId, String userCourseId,Date startDate, Date endDate) throws Exception {
+		return userExerciseLogRepository.findByUserIdAndUserCourseIdAndExerciseDateBetween(userId, userCourseId, startDate, endDate);
 	}
 
 	@Override

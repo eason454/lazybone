@@ -29,6 +29,11 @@ public class UserCourseServiceImpl implements IUserCourseService {
     }
 
     @Override
+    public List<UserCourse> queryUserCourse(String userId) {
+        return userCourseRepository.findByUserIdAndState(userId, State.valid);
+    }
+    
+    @Override
     public UserCourse save(UserCourse userCourse) {
         return userCourseRepository.save(userCourse);
     }
@@ -47,4 +52,10 @@ public class UserCourseServiceImpl implements IUserCourseService {
 	public UserCourse queryByUserIdAndCouseId(String userId, String courseId) {
 		return userCourseRepository.findByUserIdAndCourseAndState(userId, courseRepository.findOne(courseId), State.valid);
 	}
+
+	@Override
+	public UserCourse findById(String userCourseId) {
+		return userCourseRepository.findOne(userCourseId);
+	}
+
 }

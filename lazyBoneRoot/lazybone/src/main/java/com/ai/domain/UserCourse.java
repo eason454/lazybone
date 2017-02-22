@@ -40,7 +40,7 @@ public class UserCourse {
     private Date endDate;
     @OneToOne
     @JoinColumn(name = "course_id")
-    @JsonProperty(value ="courseTemplateId",required = true)
+    @JsonProperty(value ="courseTemplate",required = true)
     private Course course;
     @Column(name = "user_id")
     private String userId;

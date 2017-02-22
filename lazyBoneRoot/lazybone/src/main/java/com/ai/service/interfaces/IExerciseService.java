@@ -25,4 +25,9 @@ public interface IExerciseService {
 	public List<UserExerciseLog> queryUserExerciseByUserCourseId(String userCourseId) throws Exception;
 	
 	public void updateUserExercise(List<UserExerciseLog> userExerciseLogs) throws Exception;
+	
+	public Page<UserExerciseLog> getUserCourseDetail(String userId, String userCourseId, Pageable pageable) throws Exception;
+
+	List<UserExerciseLog> queryUserExerciseInfo(String userId, String userCourseId, Date startDate, Date endDate)
+			throws Exception;
 }

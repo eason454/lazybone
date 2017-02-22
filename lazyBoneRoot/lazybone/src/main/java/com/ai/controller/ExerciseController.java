@@ -7,9 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,59 +23,76 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ExerciseController {
 
 	ObjectMapper mapper = new ObjectMapper();
-	
+
 	@Autowired
 	IExerciseService exerciseService;
-	
+
 	@Autowired
 	IUserCourseService userCourseService;
-	
 
-	@GetMapping(path = "/queryCourseDetail/{courseId}/{userId}")
-	public UserExerciseInfoPage queryCourseDetail(@PathVariable("userId") String userId,
-			@PathVariable("courseId") String courseId, Pageable pageable) throws Exception {
-		UserExerciseInfoPage userExerciseInfoPage = new UserExerciseInfoPage();
-		userExerciseInfoPage.setUserExerciseLogs(exerciseService.getCourseDetail(userId, courseId, pageable));
-		userExerciseInfoPage.setUserCourse(userCourseService.queryByUserIdAndCouseId(userId, courseId));
-		return userExerciseInfoPage;
-	}
-
-	@PostMapping(path = "/recordExercise/{courseId}/{fitActionId}/{userId}")
+	@RequestMapping(path = "/recordExercise/{courseId}/{fitActionId}/{userId}")
 	public void recordExercise(@PathVariable("courseId") String courseId, @PathVariable("userId") String userId,
 			@PathVariable("fitActionId") String fitActionId) throws Exception {
 		exerciseService.recordExercise(courseId, userId, fitActionId);
 	}
 
-	@PostMapping(path = "/queryMyTodayExerciseInfo/{userId}/{date}")
+	@RequestMapping(path = "/queryExerciseInfo/{userId}/{userCourseId}")
+	public UserExerciseInfoPage queryExerciseInfo(@PathVariable("userId") String userId,
+			@PathVariable("userCourseId") String userCourseId, Pageable pageable) throws Exception {
+		UserExerciseInfoPage userExerciseInfoPage = new UserExerciseInfoPage();
+		userExerciseInfoPage.setUserExerciseLogs(exerciseService.getUserCourseDetail(userId, userCourseId, pageable));
+		userExerciseInfoPage.setUserCourse(userCourseService.findById(userCourseId));
+		return userExerciseInfoPage;
+	}
+	
+	@RequestMapping(path = "/queryExerciseInfo/{userId}/{userCourseId}/{date}")
 	@ResponseBody
-	public UserExerciseInfo queryUserExerciseInfoByDay(@PathVariable("userId") String userId, @PathVariable("date") String date)
-			throws Exception {
+	public UserExerciseInfo queryExerciseInfo(@PathVariable("userId") String userId,
+			@PathVariable("userCourseId") String userCourseId, @PathVariable("date") String date) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date searchDate = sdf.parse(date);
 
-		List<UserExerciseLog> userExerciseLogs = exerciseService.queryUserExerciseInfo(userId,
+		List<UserExerciseLog> userExerciseLogs = exerciseService.queryUserExerciseInfo(userId, userCourseId,
 				ConstUtils.getDateStartTime(searchDate), ConstUtils.getDateEndTime(searchDate));
 		UserExerciseInfo userExerciseInfo = new UserExerciseInfo();
-		
+
 		userExerciseInfo.setUserExerciseLogs(userExerciseLogs);
 		userExerciseInfo.setUserCourses(userCourseService.queryUserCourses(userId));
 		return userExerciseInfo;
 	}
 
-	@PostMapping(path = "/refreshUserCourseProcess")
+	@RequestMapping(path = "/queryExerciseInfo/{userId}/{userCourseId}/{startDate}/{endDate}")
+	@ResponseBody
+	public UserExerciseInfo queryExerciseInfo(@PathVariable("userId") String userId,
+			@PathVariable("userCourseId") String userCourseId, @PathVariable("startDate") String startDateStr,
+			@PathVariable("endDate") String endDateStr) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date startdate = sdf.parse(startDateStr);
+		Date endDate = sdf.parse(endDateStr);
+
+		List<UserExerciseLog> userExerciseLogs = exerciseService.queryUserExerciseInfo(userId, userCourseId,
+				ConstUtils.getDateStartTime(startdate), ConstUtils.getDateEndTime(endDate));
+
+		UserExerciseInfo userExerciseInfo = new UserExerciseInfo();
+		userExerciseInfo.setUserExerciseLogs(userExerciseLogs);
+		userExerciseInfo.setUserCourses(userCourseService.queryUserCourses(userId));
+		return userExerciseInfo;
+	}
+
+	@RequestMapping(path = "/refreshUserCourseProcess")
 	public boolean refreshUserCourseProcess() {
 		exerciseService.refreshUserCourseProcess();
 		return true;
 	}
-	
-	public class UserExerciseInfo{
+
+	public class UserExerciseInfo {
 		List<UserExerciseLog> userExerciseLogs;
 		List<UserCourse> userCourses;
-		
+
 		public List<UserExerciseLog> getUserExerciseLogs() {
 			return userExerciseLogs;
 		}
-		
+
 		public void setUserExerciseLogs(List<UserExerciseLog> userExerciseLogs) {
 			this.userExerciseLogs = userExerciseLogs;
 		}
@@ -89,11 +105,11 @@ public class ExerciseController {
 			this.userCourses = userCourses;
 		}
 	}
-	
-	public class UserExerciseInfoPage{
+
+	public class UserExerciseInfoPage {
 		Page<UserExerciseLog> userExerciseLogs;
 		UserCourse userCourse;
-		
+
 		public Page<UserExerciseLog> getUserExerciseLogs() {
 			return userExerciseLogs;
 		}
