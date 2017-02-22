@@ -27,8 +27,11 @@ import java.util.List;
 public class UserCourseController {
     @Autowired
     private IUserCourseService userCourseService;
+//    @Autowired
+//    private ICourseService service;
+    
     @Autowired
-    private ICourseService service;
+    private IExerciseService exerciseService;
     
     @PostMapping(path = "/queryMyHistoryExerciseInfo")
     public List<UserCourse> queryHistoryCourse(@RequestBody String userId){
@@ -85,15 +88,14 @@ public class UserCourseController {
 //    }
 
     @PostMapping(path = "/giveUpCourse")
-    public void giveUpCourse(@RequestBody UserCourse userCourse){
+    public void giveUpCourse(@RequestBody UserCourse userCourse) throws Exception{
         UserCourse oldUserCourse=userCourseService.findByUserIdAndUserCourse(userCourse.getUserId(),userCourse.getCourse());
         oldUserCourse.setState(State.invalid);
         oldUserCourse.setEndDate(new DateTime().toDate());
         //删除失效运动记录逻辑
-        //课程失效不代表运动记录失效,而且这个批量效率太低不适合在一个请求完成
-//        List<UserExerciseLog> userExerciseLogs=oldUserCourse.getUserExerciseLogs();
-//        userExerciseLogs.stream().forEach(e -> e.setState(State.invalid));
-//        userCourseService.save(oldUserCourse);
-
+        List<UserExerciseLog> userExerciseLogs= exerciseService.queryUserExerciseByUserCourseId(userCourse.getUserCourseId());
+        userExerciseLogs.stream().forEach(e -> e.setState(State.invalid));
+        userCourseService.save(oldUserCourse);
+        exerciseService.updateUserExercise(userExerciseLogs);
     }
 }

@@ -5,6 +5,8 @@ import com.ai.domain.UserCourse;
 import com.ai.repository.UserCourseRepository;
 import com.ai.service.interfaces.IUserCourseService;
 import com.ai.util.consts.CommonConst;
+import com.ai.util.consts.CommonConst.State;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,4 +33,9 @@ public class UserCourseServiceImpl implements IUserCourseService {
     public UserCourse findByUserIdAndUserCourse(String userId, Course course) {
         return userCourseRepository.findByUserIdAndCourseId(userId,course.getId());
     }
+
+	@Override
+	public List<UserCourse> queryUserCourses(String userId) {
+		return userCourseRepository.findByUserIdAndState(userId, State.valid);
+	}
 }

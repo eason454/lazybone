@@ -1,5 +1,8 @@
 package com.ai.service.interfaces;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,5 +18,11 @@ public interface IExerciseService {
 	
 	public UserExerciseLog createCourseDetail(UserCourse userCourse,CourseItem courseItem) throws Exception;
 	
+	public List<UserExerciseLog> queryUserExerciseInfo(String userId ,Date startDate, Date endDate) throws Exception;
+	
 	public void refreshUserCourseProcess();
+	
+	public List<UserExerciseLog> queryUserExerciseByUserCourseId(String userCourseId) throws Exception;
+	
+	public void updateUserExercise(List<UserExerciseLog> userExerciseLogs) throws Exception;
 }

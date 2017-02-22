@@ -12,4 +12,5 @@ public interface IUserCourseService {
      List<UserCourse> queryHistoryCourse(String userId);
      UserCourse save(UserCourse userCourse);
      UserCourse findByUserIdAndUserCourse(String userId,Course course);
+     List<UserCourse> queryUserCourses(String userId);
 }

@@ -134,4 +134,19 @@ public class ExerciseServiceImpl implements IExerciseService {
 		
 		return resultProcess;
 	}
+
+	@Override
+	public List<UserExerciseLog> queryUserExerciseInfo(String userId, Date startDate, Date endDate) throws Exception {
+		return userExerciseLogRepository.findByUserIdAndExerciseDateBetween(userId, startDate, endDate);
+	}
+
+	@Override
+	public List<UserExerciseLog> queryUserExerciseByUserCourseId(String userCourseId) throws Exception {
+		return userExerciseLogRepository.findByUserCourseIdAndState(userCourseId, State.valid);
+	}
+
+	@Override
+	public void updateUserExercise(List<UserExerciseLog> userExerciseLogs) throws Exception {
+		userExerciseLogRepository.save(userExerciseLogs);
+	}
 }
