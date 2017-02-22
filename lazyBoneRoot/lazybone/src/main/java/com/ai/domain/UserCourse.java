@@ -7,9 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by eason on 2017/2/16.
@@ -33,34 +31,27 @@ public class UserCourse {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateDate;
     @Column(name = "end_date")
-    @UpdateTimestamp
+//    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date endDate;
     @OneToOne
     @JoinColumn(name = "course_id")
-    @JsonProperty(value ="courseTemplateId",required = true)
+    @JsonProperty(value ="courseTemplate",required = true)
     private Course course;
     @Column(name = "user_id")
     private String userId;
-    @OneToMany(mappedBy = "userCourse",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<UserExerciseLog> userExerciseLogs=new ArrayList<>();
+    private int process = 0;
+    
+    
+    public int getProcess() {
+		return process;
+	}
 
-    public List<UserExerciseLog> getUserExerciseLogs() {
-        return userExerciseLogs;
-    }
+	public void setProcess(int process) {
+		this.process = process;
+	}
 
-    public void setUserExerciseLogs(List<UserExerciseLog> userExerciseLogs) {
-        this.userExerciseLogs = userExerciseLogs;
-    }
-    public void addUserExerciseLog(UserExerciseLog userExerciseLog){
-        userExerciseLogs.add(userExerciseLog);
-        userExerciseLog.setUserCourse(this);
-    }
-    public void removeUserExerciseLog(UserExerciseLog userExerciseLog){
-        userExerciseLogs.remove(userExerciseLog);
-        userExerciseLog.setUserCourse(null);
-    }
-    public String getUserId() {
+	public String getUserId() {
         return userId;
     }
 
@@ -119,13 +110,12 @@ public class UserCourse {
     public UserCourse() {
     }
 
-    public UserCourse(Date createDate, CommonConst.State state, Date updateDate, Date endDate, Course course, String userId, List<UserExerciseLog> userExerciseLogs) {
+    public UserCourse(Date createDate, CommonConst.State state, Date updateDate, Date endDate, Course course, String userId) {
         this.createDate = createDate;
         this.state = state;
         this.updateDate = updateDate;
         this.endDate = endDate;
         this.course = course;
         this.userId = userId;
-        this.userExerciseLogs = userExerciseLogs;
     }
 }

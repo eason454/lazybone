@@ -3,6 +3,8 @@ package com.ai.domain;
 
 import org.hibernate.annotations.*;
 
+import com.ai.util.consts.CommonConst;
+
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -38,6 +40,10 @@ public class Course {
     private Date updateDate;
     @Column(name = "course_days")
     private int courseDays;
+    
+    @Enumerated(EnumType.ORDINAL)
+    private CommonConst.State state = CommonConst.State.valid;
+    
     @OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<CourseItem> courseItems=new ArrayList<>();
     public void addCourseItem(CourseItem item){
@@ -128,5 +134,12 @@ public class Course {
     public Course(String id){
         this.id=id;
     }
-
+	public CommonConst.State getState() {
+		return state;
+	}
+	public void setState(CommonConst.State state) {
+		this.state = state;
+	}
+ 
+    
 }

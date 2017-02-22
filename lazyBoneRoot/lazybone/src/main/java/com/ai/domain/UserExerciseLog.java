@@ -22,9 +22,15 @@ public class UserExerciseLog {
 
     @Column(name = "user_id")
     private String userId;
-    @ManyToOne
-    @JoinColumn(name = "user_course_id")
-    private UserCourse userCourse;
+    //用户课程订购实例
+    @Column(name = "user_course_id")
+    private String userCourseId;
+    //课程
+    @Column(name = "course_id")
+    private String courseId;
+    //课程项目
+    @Column(name = "course_item_id")
+    private String courseItemId;
     //锻炼次数
     @Column(name = "actual_count")
     private int actualCount;
@@ -41,9 +47,9 @@ public class UserExerciseLog {
     private Date exerciseDate;
     @Enumerated(EnumType.ORDINAL)
     private CommonConst.State state;
-    @ManyToOne
-    @JoinColumn(name = "exercise_type")
-    private FitAction exerciseType;
+    
+    @Column(name = "exercise_type")
+    private String exerciseType;
 
     //需要锻炼次数
     @Column(name = "require_times")
@@ -59,31 +65,32 @@ public class UserExerciseLog {
         this.state = state;
     }
 
-    public FitAction getExerciseType() {
-        return exerciseType;
-    }
+//    public UserExerciseLog(String userId, UserCourse userCourse, int actualCount, Date createDate, Date updateDate, Date exerciseDate, CommonConst.State state, FitAction exerciseType) {
+//
+//        this.userId = userId;
+//        this.userCourse = userCourse;
+//        this.actualCount = actualCount;
+//        this.createDate = createDate;
+//        this.updateDate = updateDate;
+//        this.exerciseDate = exerciseDate;
+//        this.state = state;
+//        this.exerciseType = exerciseType;
+//    }
 
-    public void setExerciseType(FitAction exerciseType) {
-        this.exerciseType = exerciseType;
-    }
-
-    public UserExerciseLog(String userId, UserCourse userCourse, int actualCount, Date createDate, Date updateDate, Date exerciseDate, CommonConst.State state, FitAction exerciseType) {
-
-        this.userId = userId;
-        this.userCourse = userCourse;
-        this.actualCount = actualCount;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-        this.exerciseDate = exerciseDate;
-        this.state = state;
-        this.exerciseType = exerciseType;
-    }
-
+    
     public String getLogId() {
         return logId;
     }
 
-    public void setLogId(String logId) {
+    public String getExerciseType() {
+		return exerciseType;
+	}
+
+	public void setExerciseType(String exerciseType) {
+		this.exerciseType = exerciseType;
+	}
+
+	public void setLogId(String logId) {
         this.logId = logId;
     }
 
@@ -93,14 +100,6 @@ public class UserExerciseLog {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public UserCourse getUserCourse() {
-        return userCourse;
-    }
-
-    public void setUserCourse(UserCourse userCourse) {
-        this.userCourse = userCourse;
     }
 
     public int getActualCount() {
@@ -155,6 +154,30 @@ public class UserExerciseLog {
 
 	public CommonConst.State getState() {
 		return state;
+	}
+	
+	public String getUserCourseId() {
+		return userCourseId;
+	}
+
+	public void setUserCourseId(String userCourseId) {
+		this.userCourseId = userCourseId;
+	}
+
+	public String getCourseId() {
+		return courseId;
+	}
+
+	public String getCourseItemId() {
+		return courseItemId;
+	}
+
+	public void setCourseItemId(String courseItemId) {
+		this.courseItemId = courseItemId;
+	}
+
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
 	}
 
 	@Override

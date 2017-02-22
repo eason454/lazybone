@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ai.domain.CourseUserRank;
 import com.ai.repository.CourseRepository;
-import com.ai.repository.CousreUserRankRepository;
+import com.ai.repository.CourseUserRankRepository;
 import com.ai.repository.UserCourseRepository;
 import com.ai.service.interfaces.ITraineeService;
 
@@ -17,7 +17,7 @@ public class TraineeServiceImpl implements ITraineeService {
 	@Autowired
 	UserCourseRepository userCourseRepository;
 	@Autowired
-	CousreUserRankRepository cousreUserRankRepository;
+	CourseUserRankRepository cousreUserRankRepository;
 	@Autowired
 	CourseRepository courseRepository;
 	

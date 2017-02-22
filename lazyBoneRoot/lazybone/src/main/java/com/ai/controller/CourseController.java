@@ -12,19 +12,22 @@ import java.util.List;
  */
 @RestController
 public class CourseController {
-    @Autowired
-    ICourseService courseService;
-    @PostMapping(path = "/saveCourse")
-    public Course save(@RequestBody Course course){
-        return courseService.save(course);
-    }
-    @GetMapping(path = "/queryCourseInfo/{course_id}")
-    public Course queryCourseById(@PathVariable("course_id") String id){
-        return courseService.queryCourceById(id);
-    }
+	
+	@Autowired
+	ICourseService courseService;
 
-    @PostMapping(path = "/queryAllLBTCourses")
-    public List<Course> queryAllCourses(){
-        return courseService.queryAllCourses();
-    }
+	@RequestMapping(path = "/saveCourse")
+	public Course save(@RequestBody Course course) {
+		return courseService.save(course);
+	}
+
+	@RequestMapping(path = "/queryCourseInfo/{course_id}")
+	public Course queryCourseById(@PathVariable("course_id") String id) {
+		return courseService.queryCourceById(id);
+	}
+
+	@RequestMapping(path = "/queryAllLBTCourses")
+	public List<Course> queryAllCourses() {
+		return courseService.queryAllCourses();
+	}
 }
