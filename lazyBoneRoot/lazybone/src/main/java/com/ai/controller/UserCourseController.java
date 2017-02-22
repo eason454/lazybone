@@ -64,15 +64,15 @@ public class UserCourseController {
         return userCourseResult;
     }
 
-    @PostMapping(path = "/giveUpCourse")
-    public void giveUpCourse(@RequestBody UserCourse userCourse) throws Exception{
-        UserCourse oldUserCourse=userCourseService.findByUserIdAndUserCourse(userCourse.getUserId(),userCourse.getCourse());
-        oldUserCourse.setState(State.giveup);
-        oldUserCourse.setEndDate(new DateTime().toDate());
+    @RequestMapping(path = "/giveUpCourse/{userCourseId}")
+    public void giveUpCourse(@PathVariable("userCourseId") String  userCourseId) throws Exception{
+        UserCourse userCourse=userCourseService.findById(userCourseId);
+        userCourse.setState(State.giveup);
+        userCourse.setEndDate(new DateTime().toDate());
         //删除失效运动记录逻辑
         List<UserExerciseLog> userExerciseLogs= exerciseService.queryUserExerciseByUserCourseId(userCourse.getUserCourseId());
         userExerciseLogs.stream().forEach(e -> e.setState(State.giveup));
-        userCourseService.save(oldUserCourse);
+        userCourseService.save(userCourse);
         exerciseService.updateUserExercise(userExerciseLogs);
     }
 }
