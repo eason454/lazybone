@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ai.domain.Course;
@@ -18,6 +17,7 @@ import com.ai.domain.UserExerciseLog;
 import com.ai.service.interfaces.ICourseService;
 import com.ai.service.interfaces.IExerciseService;
 import com.ai.service.interfaces.IUserCourseService;
+import com.ai.util.consts.CommonConst;
 import com.ai.util.consts.CommonConst.State;
 import com.ai.util.consts.ConstUtils;
 import com.ai.util.exception.ResourceExistException;
@@ -35,14 +35,14 @@ public class UserCourseController {
     @Autowired
     private IExerciseService exerciseService;
     
-    @RequestMapping(path = "/queryAllUserCourse/{userId}")
+    @RequestMapping(path = "/queryUserCourse/{userId}")
     public List<UserCourse> queryAllUserCourse(@PathVariable("userId") String userId){
         return userCourseService.queryHistoryCourse(userId);
     }
     
-    @RequestMapping(path = "/queryUserCourseValid/{userId}")
-    public List<UserCourse> queryUserCourseValid(@PathVariable("userId") String userId){
-        return userCourseService.queryUserCourse(userId);
+    @RequestMapping(path = "/queryUserCourse/{userId}/{state}")
+    public List<UserCourse> queryUserCourseValid(@PathVariable("userId") String userId, @PathVariable("state") String state ){
+        return userCourseService.queryUserCourse(userId, State.valueOf(state));
     }
     
     @RequestMapping(path = "/createUserCourse/{courseId}/{userId}")

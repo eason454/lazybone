@@ -2,6 +2,7 @@ package com.ai.service.interfaces;
 
 import com.ai.domain.Course;
 import com.ai.domain.UserCourse;
+import com.ai.util.consts.CommonConst.State;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface IUserCourseService {
 
 	UserCourse findById(String userCourseId);
 
-	List<UserCourse> queryUserCourse(String userId);
+	List<UserCourse> queryUserCourse(String userId, State state);
 
 	UserCourse findByUserIdAndCourseId(String userId, String courseId);
 
