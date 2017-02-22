@@ -1,5 +1,6 @@
 package com.ai.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
 
 import com.ai.domain.Course;
 import com.ai.domain.CourseItem;
+import com.ai.domain.CourseUserRank;
 import com.ai.domain.UserCourse;
 import com.ai.domain.UserExerciseLog;
 import com.ai.repository.CourseRepository;
+import com.ai.repository.CourseUserRankRepository;
 import com.ai.repository.UserCourseRepository;
 import com.ai.repository.UserExerciseLogRepository;
 import com.ai.service.interfaces.IExerciseService;
@@ -33,6 +36,8 @@ public class ExerciseServiceImpl implements IExerciseService {
 	UserCourseRepository userCourseRepository;
 	@Autowired
 	CourseRepository courseRepository;
+	@Autowired
+	CourseUserRankRepository courseUserRankRepository;
 
 	// 需要简单的缓存一下用户订购
 	volatile static Map<String, UserExerciseLog> userExerciseCache = new WeakHashMap<String, UserExerciseLog>();
@@ -76,24 +81,24 @@ public class ExerciseServiceImpl implements IExerciseService {
 		return userExerciseLogRepository.findByUserCourseIdOrderByExerciseDateDesc(userCourse.getUserCourseId(),
 				pageable);
 	}
-	
+
 	@Override
-	public Page<UserExerciseLog> getUserCourseDetail(String userId, String userCourseId, Pageable pageable) throws Exception {
+	public Page<UserExerciseLog> getUserCourseDetail(String userId, String userCourseId, Pageable pageable)
+			throws Exception {
 		UserCourse userCourse = userCourseRepository.findOne(userCourseId);
 		return userExerciseLogRepository.findByUserCourseIdOrderByExerciseDateDesc(userCourse.getUserCourseId(),
 				pageable);
 	}
 
 	@Override
-	public void recordExercise(String courseId, String userId, String exerciseType) throws Exception {
+	public void recordExercise(String userCourseId, String userId, String exerciseType) throws Exception {
 		UserExerciseLog userExerciseLog;
 		// 按课程、用户、动作、日期查询运动记录
-		userExerciseLog = userExerciseLogRepository.findByCourseIdAndUserIdAndExerciseTypeAndExerciseDate(courseId,
-				userId, exerciseType, new Date(ConstUtils.getTodayStartTime()));
+		userExerciseLog = userExerciseLogRepository.findByUserCourseIdAndUserIdAndExerciseTypeAndExerciseDate(
+				userCourseId, userId, exerciseType, new Date(ConstUtils.getTodayStartTime()));
 		// 如果还没生成那么生成一个运动记录
 		if (userExerciseLog == null) {
-			Course course = courseRepository.findOne(courseId);
-			UserCourse userCourse = userCourseRepository.findByUserIdAndCourseAndState(userId, course, State.valid);
+			UserCourse userCourse = userCourseRepository.findOne(userCourseId);
 			for (CourseItem courseItem : userCourse.getCourse().getCourseItems()) {
 				if (exerciseType.equals(courseItem.getExerciseType().getId())) {
 					userExerciseLog = createCourseDetail(userCourse, courseItem);
@@ -122,6 +127,31 @@ public class ExerciseServiceImpl implements IExerciseService {
 			userCourseRepository.save(userCourse);
 			// 完成课程
 			completeUserCourse(userCourse);
+		}
+		//計算排名
+		computerCourseRank();
+	}
+
+	//計算排名
+	public void computerCourseRank() {
+		courseUserRankRepository.deleteByRankDate(new Date(ConstUtils.getTodayStartTime()));
+		List<Course> courses = courseRepository.findByState(State.valid);
+		for (Course course : courses) {
+			List<UserCourse> userCourses = userCourseRepository.findByCourseAndStateOrderByProcessDesc(course, State.valid);
+			int rank = 1;
+			List<CourseUserRank> courseUserRanks = new ArrayList<CourseUserRank>();
+			for (UserCourse userCourse : userCourses) {
+				CourseUserRank courseUserRank = new CourseUserRank();
+				courseUserRank.setProcess(userCourse.getProcess());
+				courseUserRank.setRankDate(new Date(ConstUtils.getTodayStartTime()));
+				courseUserRank.setUserId(userCourse.getUserId());
+				courseUserRank.setCourseId(course.getId());
+				courseUserRank.setUserCourseId(userCourse.getUserCourseId());
+				courseUserRank.setRank(rank);
+				courseUserRanks.add(courseUserRank);
+				rank++;
+			}
+			courseUserRankRepository.save(courseUserRanks);
 		}
 	}
 
@@ -167,10 +197,12 @@ public class ExerciseServiceImpl implements IExerciseService {
 	public List<UserExerciseLog> queryUserExerciseInfo(String userId, Date startDate, Date endDate) throws Exception {
 		return userExerciseLogRepository.findByUserIdAndExerciseDateBetween(userId, startDate, endDate);
 	}
-	
+
 	@Override
-	public List<UserExerciseLog> queryUserExerciseInfo(String userId, String userCourseId,Date startDate, Date endDate) throws Exception {
-		return userExerciseLogRepository.findByUserIdAndUserCourseIdAndExerciseDateBetween(userId, userCourseId, startDate, endDate);
+	public List<UserExerciseLog> queryUserExerciseInfo(String userId, String userCourseId, Date startDate, Date endDate)
+			throws Exception {
+		return userExerciseLogRepository.findByUserIdAndUserCourseIdAndExerciseDateBetween(userId, userCourseId,
+				startDate, endDate);
 	}
 
 	@Override

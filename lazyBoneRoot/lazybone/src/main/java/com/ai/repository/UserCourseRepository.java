@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ai.domain.Course;
 import com.ai.domain.UserCourse;
 import com.ai.util.consts.CommonConst;
+import com.ai.util.consts.CommonConst.State;
 
 /**
  * Created by eason on 2017/2/16.
@@ -28,4 +29,6 @@ public interface UserCourseRepository extends JpaRepository<UserCourse,String> {
     UserCourse findByUserIdAndCourseAndState(String userId, Course course, CommonConst.State state);
     
 	List<UserCourse> findByUserId(String userId);
+
+	List<UserCourse> findByCourseAndStateOrderByProcessDesc(Course course, State valid);
 }

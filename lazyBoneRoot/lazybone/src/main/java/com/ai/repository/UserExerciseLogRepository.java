@@ -28,5 +28,8 @@ public interface UserExerciseLogRepository extends JpaRepository<UserExerciseLog
 
 	List<UserExerciseLog> findByUserIdAndUserCourseIdAndExerciseDateBetween(String userId, String userCourseId,
 			Date startDate, Date endDate);
+
+	UserExerciseLog findByUserCourseIdAndUserIdAndExerciseTypeAndExerciseDate(String userCourseId, String userId,
+			String exerciseType, Date date);
 	
 }
