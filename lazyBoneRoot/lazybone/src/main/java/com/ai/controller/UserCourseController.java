@@ -1,24 +1,24 @@
 package com.ai.controller;
 
-import com.ai.domain.Course;
-import com.ai.domain.CourseItem;
-import com.ai.domain.UserCourse;
-import com.ai.domain.UserExerciseLog;
-import com.ai.service.interfaces.ICourseService;
-import com.ai.service.interfaces.IExerciseService;
-import com.ai.service.interfaces.IUserCourseService;
-import com.ai.util.consts.CommonConst;
-import com.ai.util.consts.CommonConst.*;
-import com.ai.util.exception.ResourceExistException;
-import com.ai.util.time.TimeUtils;
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ai.domain.UserCourse;
+import com.ai.domain.UserExerciseLog;
+import com.ai.service.interfaces.IExerciseService;
+import com.ai.service.interfaces.IUserCourseService;
+import com.ai.util.consts.CommonConst.State;
+import com.ai.util.exception.ResourceExistException;
+import com.ai.util.time.TimeUtils;
 
 /**
  * Created by eason on 2017/2/16.
@@ -33,10 +33,11 @@ public class UserCourseController {
     @Autowired
     private IExerciseService exerciseService;
     
-    @PostMapping(path = "/queryMyHistoryExerciseInfo")
-    public List<UserCourse> queryHistoryCourse(@RequestBody String userId){
+    @RequestMapping(path = "/queryMyHistoryExerciseInfo/{userId}")
+    public List<UserCourse> queryHistoryCourse(@PathVariable("userId") String userId){
         return userCourseService.queryHistoryCourse(userId);
     }
+    
     @RequestMapping(path = "/insertUserCourse",method = RequestMethod.POST)
     public UserCourse saveUserCourse(@RequestBody UserCourse userCourse){
         //whether exists

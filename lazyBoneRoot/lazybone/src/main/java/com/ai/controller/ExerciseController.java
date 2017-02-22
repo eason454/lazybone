@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,13 +33,15 @@ public class ExerciseController {
 	
 
 	@GetMapping(path = "/queryCourseDetail/{courseId}/{userId}")
-	public Page<UserExerciseLog> queryCourseDetail(@PathVariable("userId") String userId,
+	public UserExerciseInfoPage queryCourseDetail(@PathVariable("userId") String userId,
 			@PathVariable("courseId") String courseId, Pageable pageable) throws Exception {
-		return exerciseService.getCourseDetail(userId, courseId, pageable);
+		UserExerciseInfoPage userExerciseInfoPage = new UserExerciseInfoPage();
+		userExerciseInfoPage.setUserExerciseLogs(exerciseService.getCourseDetail(userId, courseId, pageable));
+		userExerciseInfoPage.setUserCourse(userCourseService.queryByUserIdAndCouseId(userId, courseId));
+		return userExerciseInfoPage;
 	}
 
 	@PostMapping(path = "/recordExercise/{courseId}/{fitActionId}/{userId}")
-	@Async
 	public void recordExercise(@PathVariable("courseId") String courseId, @PathVariable("userId") String userId,
 			@PathVariable("fitActionId") String fitActionId) throws Exception {
 		exerciseService.recordExercise(courseId, userId, fitActionId);
@@ -86,6 +87,27 @@ public class ExerciseController {
 
 		public void setUserCourses(List<UserCourse> userCourses) {
 			this.userCourses = userCourses;
+		}
+	}
+	
+	public class UserExerciseInfoPage{
+		Page<UserExerciseLog> userExerciseLogs;
+		UserCourse userCourse;
+		
+		public Page<UserExerciseLog> getUserExerciseLogs() {
+			return userExerciseLogs;
+		}
+
+		public void setUserExerciseLogs(Page<UserExerciseLog> userExerciseLogs) {
+			this.userExerciseLogs = userExerciseLogs;
+		}
+
+		public UserCourse getUserCourse() {
+			return userCourse;
+		}
+
+		public void setUserCourse(UserCourse userCourse) {
+			this.userCourse = userCourse;
 		}
 	}
 }

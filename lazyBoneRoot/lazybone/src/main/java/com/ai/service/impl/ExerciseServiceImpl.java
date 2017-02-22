@@ -10,7 +10,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -99,24 +98,45 @@ public class ExerciseServiceImpl implements IExerciseService {
 		// 计算运动进度，如果多余规定运动数那么是100%，低于要求运动数计算运动百分比
 		int process = (int) (Math.floor(userExerciseLog.getActualCount() > userExerciseLog.getRequireTimes() ? 100
 				: userExerciseLog.getActualCount()*100 / userExerciseLog.getRequireTimes()));
-
 		userExerciseLog.setProcess(process);
-
 		// 更新运动记录
 		userExerciseLogRepository.save(userExerciseLog);
 	}
 
 	@Override
 	@Scheduled(cron = "0 0 0 * * *")
+	//按日刷新进度和完成课程
 	public void refreshUserCourseProcess(){
 		List<UserCourse> userCourses = userCourseRepository.findByState(State.valid);
 		// 循环每个有效课程
 		for (UserCourse userCourse : userCourses) {
+			//设置课程进度
 			userCourse.setProcess(computerUserCourseProcess(userCourse));
 			userCourseRepository.save(userCourse);
+			//完成课程
+			completeUserCourse(userCourse);
 		}
 	}
 
+	/**
+	 * 完成课程
+	 * @param userCourse
+	 */
+	public void completeUserCourse(UserCourse userCourse){
+		//是否需要完成课程
+		Date date = new Date();
+		if(date.compareTo(userCourse.getEndDate()) > 0 ){
+			userCourse.setState(State.complete);
+			try {
+				List<UserExerciseLog> userExerciseLogs = queryUserExerciseByUserCourseId(userCourse.getUserCourseId());
+				userExerciseLogs.forEach(userExerciseLog -> userExerciseLog.setState(State.complete));
+				updateUserExercise(userExerciseLogs);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	//计算当前课程进度
 	private int computerUserCourseProcess(UserCourse userCourse){
 		int resultProcess = 0;
@@ -131,7 +151,6 @@ public class ExerciseServiceImpl implements IExerciseService {
 		}
 		//对进度取整
 		resultProcess = (int) (Math.floor((exeProcess*100)/(exeNumber*courseDay*100)));
-		
 		return resultProcess;
 	}
 

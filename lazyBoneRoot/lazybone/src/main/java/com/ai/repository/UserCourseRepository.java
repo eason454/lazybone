@@ -14,11 +14,18 @@ import com.ai.util.consts.CommonConst;
  * Created by eason on 2017/2/16.
  */
 public interface UserCourseRepository extends JpaRepository<UserCourse,String> {
+	
     List<UserCourse> findByUserIdAndState(String userId,CommonConst.State state);
+    
     UserCourse findByUserIdAndCourseIdAndState(String userId, String course, CommonConst.State state);
+    
     Page<UserCourse>  findByCourseAndState(Course course, CommonConst.State state, Pageable pageable);
+    
     UserCourse findByUserIdAndCourseId(String userId, String courseId);
+    
     List<UserCourse>  findByState(CommonConst.State state);
     
     UserCourse findByUserIdAndCourseAndState(String userId, Course course, CommonConst.State state);
+    
+	List<UserCourse> findByUserId(String userId);
 }
