@@ -24,4 +24,6 @@ public interface IUserCourseService {
 
 	List<UserCourse> queryUserCourse(String userId);
 
+	UserCourse findByUserIdAndCourseId(String userId, String courseId);
+
 }

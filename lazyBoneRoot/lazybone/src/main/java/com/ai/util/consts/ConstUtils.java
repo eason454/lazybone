@@ -33,4 +33,11 @@ public class ConstUtils {
         todayStart.set(Calendar.MILLISECOND, 999);  
         return todayStart.getTime();
 	}
+	
+	public static Date addDay(Date date, int amount){
+		Calendar todayStart = Calendar.getInstance();
+		todayStart.setTime(date);
+		todayStart.add(Calendar.DATE, amount);
+		return todayStart.getTime();
+	}
 }

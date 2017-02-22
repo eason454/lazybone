@@ -58,4 +58,9 @@ public class UserCourseServiceImpl implements IUserCourseService {
 		return userCourseRepository.findOne(userCourseId);
 	}
 
+	@Override
+	public UserCourse findByUserIdAndCourseId(String userId, String courseId) {
+		return userCourseRepository.findByUserIdAndCourseIdAndState(userId, courseId, State.valid);
+	}
+
 }

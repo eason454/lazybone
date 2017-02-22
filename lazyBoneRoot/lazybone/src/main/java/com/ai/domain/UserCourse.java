@@ -44,7 +44,7 @@ public class UserCourse {
     private Course course;
     @Column(name = "user_id")
     private String userId;
-    private int process;
+    private int process = 0;
     
     
     
