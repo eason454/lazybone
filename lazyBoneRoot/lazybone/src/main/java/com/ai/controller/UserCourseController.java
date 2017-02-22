@@ -45,7 +45,7 @@ public class UserCourseController {
         return userCourseService.queryUserCourse(userId);
     }
     
-    @RequestMapping(path = "/createUserCourse/{courseId}/{userId}",method = RequestMethod.POST)
+    @RequestMapping(path = "/createUserCourse/{courseId}/{userId}")
     public UserCourse saveUserCourse(@PathVariable("courseId") String courseId,@PathVariable("userId") String userId ){
         //whether exists
         UserCourse oldUserCourse = userCourseService.findByUserIdAndCourseId(userId, courseId);
@@ -56,8 +56,9 @@ public class UserCourseController {
         Course course = courseService.queryCourceById(courseId);
         userCourse.setState(State.valid);
         userCourse.setCourse(course);
-        int days=userCourse.getCourse().getCourseDays();
-        Date endDate= ConstUtils.addDay(new Date(), days);
+        userCourse.setUserId(userId);
+        int days = course.getCourseDays();
+        Date endDate = ConstUtils.addDay(new Date(), days);
         userCourse.setEndDate(endDate);
         UserCourse userCourseResult=userCourseService.save(userCourse);
         userCourseResult.getCourse();//load course
