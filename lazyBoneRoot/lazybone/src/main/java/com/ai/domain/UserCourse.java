@@ -1,17 +1,25 @@
 package com.ai.domain;
 
-import com.ai.util.consts.CommonConst;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.ai.util.consts.CommonConst;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by eason on 2017/2/16.
@@ -46,26 +54,6 @@ public class UserCourse {
     private String userId;
     private int process = 0;
     
-    
-    
-//    @OneToMany(mappedBy = "userCourse",cascade = CascadeType.ALL,orphanRemoval = true)
-//    private List<UserExerciseLog> userExerciseLogs=new ArrayList<>();
-
-//    public List<UserExerciseLog> getUserExerciseLogs() {
-//        return userExerciseLogs;
-//    }
-//
-//    public void setUserExerciseLogs(List<UserExerciseLog> userExerciseLogs) {
-//        this.userExerciseLogs = userExerciseLogs;
-//    }
-//    public void addUserExerciseLog(UserExerciseLog userExerciseLog){
-//        userExerciseLogs.add(userExerciseLog);
-//        userExerciseLog.setUserCourse(this);
-//    }
-//    public void removeUserExerciseLog(UserExerciseLog userExerciseLog){
-//        userExerciseLogs.remove(userExerciseLog);
-//        userExerciseLog.setUserCourse(null);
-//    }
     
     public int getProcess() {
 		return process;
@@ -141,6 +129,5 @@ public class UserCourse {
         this.endDate = endDate;
         this.course = course;
         this.userId = userId;
-//        this.userExerciseLogs = userExerciseLogs;
     }
 }

@@ -17,7 +17,6 @@ import com.ai.domain.UserExerciseLog;
 import com.ai.service.interfaces.ICourseService;
 import com.ai.service.interfaces.IExerciseService;
 import com.ai.service.interfaces.IUserCourseService;
-import com.ai.util.consts.CommonConst;
 import com.ai.util.consts.CommonConst.State;
 import com.ai.util.consts.ConstUtils;
 import com.ai.util.exception.ResourceExistException;
