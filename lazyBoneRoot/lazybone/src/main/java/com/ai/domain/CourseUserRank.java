@@ -34,7 +34,7 @@ public class CourseUserRank {
 	long process;
 	
 	@Column(name = "rank_date")
-    @CreationTimestamp
+//    @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date rankDate;
 
