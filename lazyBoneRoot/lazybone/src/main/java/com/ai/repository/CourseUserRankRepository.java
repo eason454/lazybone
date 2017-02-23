@@ -10,7 +10,9 @@ import com.ai.domain.CourseUserRank;
 
 
 public interface CourseUserRankRepository extends JpaRepository<CourseUserRank, String> {
-	Page<CourseUserRank> findByCourseIdOrderByRank(String courseId, Pageable pageable);
 
 	void deleteByRankDate(Date date);
+
+	Page<CourseUserRank> findByCourseIdBetweenRankDateOrderByRank(String courseId, Date startDate, Date endDate,
+			Pageable pageable);
 }

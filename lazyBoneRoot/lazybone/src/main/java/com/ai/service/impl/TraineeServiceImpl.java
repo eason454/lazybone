@@ -1,5 +1,7 @@
 package com.ai.service.impl;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +24,7 @@ public class TraineeServiceImpl implements ITraineeService {
 	CourseRepository courseRepository;
 	
 	@Override
-	public Page<CourseUserRank> getRank(String userId, String courseId, Pageable pageable) throws Exception {
-		return cousreUserRankRepository.findByCourseIdOrderByRank(courseId,pageable);
+	public Page<CourseUserRank> getRank(String userId, String courseId, Date startDate, Date endDate, Pageable pageable) throws Exception {
+		return cousreUserRankRepository.findByCourseIdBetweenRankDateOrderByRank(courseId,startDate,endDate,pageable);
 	}
 }
