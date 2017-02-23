@@ -13,6 +13,6 @@ public interface CourseUserRankRepository extends JpaRepository<CourseUserRank, 
 
 	void deleteByRankDate(Date date);
 
-	Page<CourseUserRank> findByCourseIdBetweenRankDateOrderByRank(String courseId, Date startDate, Date endDate,
+	Page<CourseUserRank> findByCourseIdAndRankDateBetweenOrderByRank(String courseId, Date startDate, Date endDate,
 			Pageable pageable);
 }
