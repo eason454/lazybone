@@ -25,6 +25,6 @@ public class TraineeServiceImpl implements ITraineeService {
 	
 	@Override
 	public Page<CourseUserRank> getRank(String userId, String courseId, Date startDate, Date endDate, Pageable pageable) throws Exception {
-		return cousreUserRankRepository.findByCourseIdBetweenRankDateOrderByRank(courseId,startDate,endDate,pageable);
+		return cousreUserRankRepository.findByCourseIdAndRankDateBetweenOrderByRank(courseId,startDate,endDate,pageable);
 	}
 }
