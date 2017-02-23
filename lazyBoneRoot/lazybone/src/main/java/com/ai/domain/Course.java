@@ -44,8 +44,9 @@ public class Course {
     @Enumerated(EnumType.ORDINAL)
     private CommonConst.State state = CommonConst.State.valid;
     
-    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL,orphanRemoval = true,fetch =  FetchType.EAGER)
     private List<CourseItem> courseItems=new ArrayList<>();
+    
     public void addCourseItem(CourseItem item){
         courseItems.add(item);
         item.setCourse(this);

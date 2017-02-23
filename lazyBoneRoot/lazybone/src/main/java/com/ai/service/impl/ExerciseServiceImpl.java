@@ -1,14 +1,18 @@
 package com.ai.service.impl;
 
+import java.lang.reflect.Executable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.WeakHashMap;
+import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -39,12 +43,14 @@ public class ExerciseServiceImpl implements IExerciseService {
 	@Autowired
 	CourseUserRankRepository courseUserRankRepository;
 
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	// 需要简单的缓存一下用户订购
 	volatile static Map<String, UserExerciseLog> userExerciseCache = new WeakHashMap<String, UserExerciseLog>();
 	// 需要简单使用一下队列
-	volatile static Queue<UserExerciseLog> exerciseQueue = new LinkedBlockingQueue<UserExerciseLog>();
+	volatile static LinkedBlockingQueue<ExerciseRecord> exerciseQueue = new LinkedBlockingQueue<ExerciseRecord>();
 
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "1 1 0 * * ?")
 	public void createCourseDetail() throws Exception {
 		// 查询用户课程
 		List<UserCourse> userCourses = userCourseRepository.findByState(State.valid);
@@ -92,31 +98,94 @@ public class ExerciseServiceImpl implements IExerciseService {
 
 	@Override
 	public void recordExercise(String userCourseId, String userId, String exerciseType) throws Exception {
-		UserExerciseLog userExerciseLog;
-		// 按课程、用户、动作、日期查询运动记录
-		userExerciseLog = userExerciseLogRepository.findByUserCourseIdAndUserIdAndExerciseTypeAndExerciseDate(
-				userCourseId, userId, exerciseType, new Date(ConstUtils.getTodayStartTime()));
-		// 如果还没生成那么生成一个运动记录
-		if (userExerciseLog == null) {
-			UserCourse userCourse = userCourseRepository.findOne(userCourseId);
-			for (CourseItem courseItem : userCourse.getCourse().getCourseItems()) {
-				if (exerciseType.equals(courseItem.getExerciseType().getId())) {
-					userExerciseLog = createCourseDetail(userCourse, courseItem);
+		exerciseQueue.add(new ExerciseRecord(userCourseId, userId, exerciseType));
+	}
+
+	
+	private ExerciseServiceImpl() {
+		
+	new	Thread (new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						ExerciseRecord exerciseRecord = exerciseQueue.take();
+						logger.info(exerciseRecord);
+						String userCourseId = exerciseRecord.userCourseId;
+						String userId = exerciseRecord.userId;
+						String exerciseType = exerciseRecord.exerciseType;
+						// TODO Auto-generated method stub
+						UserExerciseLog userExerciseLog;
+						// 按课程、用户、动作、日期查询运动记录
+						userExerciseLog = userExerciseLogRepository
+								.findByUserCourseIdAndUserIdAndExerciseTypeAndExerciseDate(userCourseId, userId,
+										exerciseType, new Date(ConstUtils.getTodayStartTime()));
+						// 如果还没生成那么生成一个运动记录
+						if (userExerciseLog == null) {
+							UserCourse userCourse = userCourseRepository.findOne(userCourseId);
+							
+							for (CourseItem courseItem : userCourse.getCourse().getCourseItems()) {
+								if (exerciseType.equals(courseItem.getExerciseType().getId())) {
+									userExerciseLog = createCourseDetail(userCourse, courseItem);
+								}
+							}
+						}
+						
+						userExerciseLog.setActualCount(userExerciseLog.getActualCount() + 1);
+						// 计算运动进度，如果多余规定运动数那么是100%，低于要求运动数计算运动百分比
+						int process = (int) (Math.floor(userExerciseLog.getActualCount() > userExerciseLog.getRequireTimes() ? 100
+								: userExerciseLog.getActualCount() * 100 / userExerciseLog.getRequireTimes()));
+						userExerciseLog.setProcess(process);
+						// 更新运动记录
+						userExerciseLogRepository.save(userExerciseLog);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
+		}).start();
+		
+	}
+
+	public class ExerciseRecord {
+		String userCourseId;
+		String userId;
+		String exerciseType;
+
+		public ExerciseRecord(String userCourseId, String userId, String exerciseType) {
+			this.exerciseType = exerciseType;
+			this.userId = userId;
+			this.userCourseId = userCourseId;
 		}
 
-		userExerciseLog.setActualCount(userExerciseLog.getActualCount() + 1);
-		// 计算运动进度，如果多余规定运动数那么是100%，低于要求运动数计算运动百分比
-		int process = (int) (Math.floor(userExerciseLog.getActualCount() > userExerciseLog.getRequireTimes() ? 100
-				: userExerciseLog.getActualCount() * 100 / userExerciseLog.getRequireTimes()));
-		userExerciseLog.setProcess(process);
-		// 更新运动记录
-		userExerciseLogRepository.save(userExerciseLog);
+		public String getUserCourseId() {
+			return userCourseId;
+		}
+
+		public void setUserCourseId(String userCourseId) {
+			this.userCourseId = userCourseId;
+		}
+
+		public String getUserId() {
+			return userId;
+		}
+
+		public void setUserId(String userId) {
+			this.userId = userId;
+		}
+
+		public String getExerciseType() {
+			return exerciseType;
+		}
+
+		public void setExerciseType(String exerciseType) {
+			this.exerciseType = exerciseType;
+		}
+
 	}
 
 	@Override
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "1 1 0 * * ?")
 	// 按日刷新进度和完成课程
 	public void refreshUserCourseProcess() {
 		List<UserCourse> userCourses = userCourseRepository.findByState(State.valid);
@@ -128,16 +197,17 @@ public class ExerciseServiceImpl implements IExerciseService {
 			// 完成课程
 			completeUserCourse(userCourse);
 		}
-		//計算排名
+		// 計算排名
 		computerCourseRank();
 	}
 
-	//計算排名
+	// 計算排名
 	public void computerCourseRank() {
 		courseUserRankRepository.deleteByRankDate(new Date(ConstUtils.getTodayStartTime()));
 		List<Course> courses = courseRepository.findByState(State.valid);
 		for (Course course : courses) {
-			List<UserCourse> userCourses = userCourseRepository.findByCourseAndStateOrderByProcessDesc(course, State.valid);
+			List<UserCourse> userCourses = userCourseRepository.findByCourseAndStateOrderByProcessDesc(course,
+					State.valid);
 			int rank = 1;
 			List<CourseUserRank> courseUserRanks = new ArrayList<CourseUserRank>();
 			for (UserCourse userCourse : userCourses) {
